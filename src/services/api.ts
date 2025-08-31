@@ -256,6 +256,24 @@ export const mediaApi = {
     }
     return response.json();
   },
+
+  async uploadMedia(files: File[]): Promise<{ message: string; uploaded_items: MediaItem[] }> {
+    const formData = new FormData();
+    files.forEach(file => {
+      formData.append('files', file);
+    });
+
+    const response = await fetch(`${API_BASE_URL}/media/upload`, {
+      method: 'POST',
+      body: formData,
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to upload media files');
+    }
+    
+    return response.json();
+  },
 };
 
 // Contexts API

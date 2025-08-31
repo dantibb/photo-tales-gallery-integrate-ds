@@ -10,7 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { Grid, LayoutGrid, RefreshCw, X, User, Sparkles, Loader2, Bug, BarChart2, ChevronLeft, ChevronRight, Mic, MoreVertical, MessageSquare, Send } from "lucide-react";
+import { Grid, LayoutGrid, RefreshCw, X, User, Sparkles, Loader2, Bug, BarChart2, ChevronLeft, ChevronRight, Mic, MoreVertical, MessageSquare, Send, Plus } from "lucide-react";
 import { mediaApi, contextsApi } from "../services/api";
 import { MediaItem } from "../types/photo.types";
 import { AIInterview } from "./AIInterview";
@@ -21,6 +21,7 @@ import { useToast } from "../hooks/use-toast";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import React, { useRef } from "react";
 import { AnamAvatar } from "./AnamAvatar";
+import { AddEvent } from "./AddEvent";
 
 // TalkingHead component: simple SVG with animated mouth
 const TalkingHead: React.FC = () => (
@@ -68,6 +69,7 @@ export function PhotoGallery() {
   const [isGeneratingYearTags, setIsGeneratingYearTags] = useState(false);
   const [talking, setTalking] = useState(false);
   const [missingFiles, setMissingFiles] = useState<Set<string>>(new Set());
+  const [showAddEvent, setShowAddEvent] = useState(false);
 
   // Save AI interface mode preference
   const handleAiInterfaceModeChange = (mode: AIInterfaceMode) => {
@@ -623,6 +625,13 @@ export function PhotoGallery() {
               </p>
             </div>
             <div className="flex items-center gap-2">
+              <Button
+                onClick={() => setShowAddEvent(true)}
+                className="flex items-center gap-2"
+              >
+                <Plus className="h-4 w-4" />
+                Add Event
+              </Button>
               <AIInterfaceSelector
                 currentMode={aiInterfaceMode}
                 currentModel={aiModel}
@@ -774,6 +783,17 @@ export function PhotoGallery() {
             />
           )}
         </div>
+      )}
+
+      {/* Add Event Modal */}
+      {showAddEvent && (
+        <AddEvent
+          onClose={() => setShowAddEvent(false)}
+          onEventAdded={() => {
+            setShowAddEvent(false);
+            loadMediaItems();
+          }}
+        />
       )}
 
       {/* Debug Window */}
