@@ -1,0 +1,575 @@
+{% extends "base.html" %}
+
+{% block title %}Gallery - GCP Media Viewer{% endblock %}
+
+{% block content %}
+<!-- Lottie Avatar Animation -->
+<div style="width: 300px; margin: 30px auto 10px auto; display: block;">
+    <div id="lottie-avatar"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        lottie.loadAnimation({
+            container: document.getElementById('lottie-avatar'),
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: 'https://assets10.lottiefiles.com/packages/lf20_tll0j4bb.json'
+        });
+    });
+</script>
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2><i class="fas fa-images me-2"></i>Media Gallery</h2>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary" onclick="refreshGallery()">
+                        <i class="fas fa-sync-alt me-1"></i>Refresh
+                    </button>
+                    <button class="btn btn-outline-danger" onclick="clearAllContexts()">
+                        <i class="fas fa-trash me-1"></i>Clear All Contexts
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="text" class="form-control" id="searchInput" placeholder="Search media files...">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="btn-group" role="group">
+                <input type="radio" class="btn-check" name="filterType" id="filterAll" value="all" checked>
+                <label class="btn btn-outline-secondary" for="filterAll">All</label>
+                
+                <input type="radio" class="btn-check" name="filterType" id="filterImages" value="images">
+                <label class="btn btn-outline-secondary" for="filterImages">Images</label>
+                
+                <input type="radio" class="btn-check" name="filterType" id="filterVideos" value="videos">
+                <label class="btn btn-outline-secondary" for="filterVideos">Videos</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div class="row">
+        <div class="col-12">
+            <div id="gallery-container">
+                <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load More Button -->
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <button id="loadMoreBtn" class="btn btn-primary" style="display: none;" onclick="loadMore()">
+                <i class="fas fa-plus me-1"></i>Load More
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Media Modal -->
+<div class="modal fade" id="mediaModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mediaModalTitle">Media Viewer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class.modal-body">
+                <div class="row">
+                    <!-- Media Preview Column -->
+                    <div class="col-md-7">
+                        <div id="mediaContent" class="position-relative">
+                            <!-- Metadata button will be added here dynamically -->
+                        </div>
+                    </div>
+                    <!-- Context Column -->
+                    <div class="col-md-5">
+                        <h5 class="mb-3">Context & Descriptions</h5>
+                        
+                        <!-- List of existing contexts -->
+                        <div id="contextList" class="mb-3" style="max-height: 40vh; overflow-y: auto;">
+                            <!-- Context items will be dynamically inserted here -->
+                        </div>
+                        
+                        <!-- Add new context form -->
+                        <div id="addContextArea">
+                            <h6 class="mb-2">Add New Description</h6>
+                            <textarea class="form-control mb-2" id="newContextInput" rows="3" placeholder="Type new description..."></textarea>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-primary" onclick="addNewContext()">
+                                    <i class="fas fa-plus me-1"></i>Add
+                                </button>
+                                <button class="btn btn-sm btn-outline-info" onclick="startInterview()">
+                                    <i class="fas fa-comments me-1"></i>AI Interview
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Edit context form (hidden by default) -->
+                        <div id="editContextArea" style="display: none;">
+                             <h6 class="mb-2">Edit Description</h6>
+                            <textarea class="form-control mb-2" id="editContextInput" rows="3"></textarea>
+                            <input type="hidden" id="editContextId">
+                            <button class="btn btn-sm btn-success" onclick="saveUpdatedContext()">
+                                <i class="fas fa-check me-1"></i>Save
+                            </button>
+                             <button class="btn btn-sm btn-secondary" onclick="cancelEdit()">
+                                <i class="fas fa-times me-1"></i>Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Metadata Modal -->
+<div class="modal fade" id="metadataModal" tabindex="-1" aria-labelledby="metadataModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="metadataModalLabel">Image Metadata</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="metadataContent">
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let allMediaItems = [];
+let filteredItems = [];
+let currentPage = 0;
+let itemsPerPage = 12;
+let currentMediaId = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadGallery();
+    setupEventListeners();
+});
+
+function setupEventListeners() {
+    document.getElementById('searchInput').addEventListener('input', filterMedia);
+    document.querySelectorAll('input[name="filterType"]').forEach(radio => {
+        radio.addEventListener('change', filterMedia);
+    });
+}
+
+function loadGallery() {
+    fetch('/api/media')
+        .then(response => response.json())
+        .then(data => {
+            allMediaItems = data;
+            filterMedia();
+        })
+        .catch(error => {
+            console.error('Error loading gallery:', error);
+            document.getElementById('gallery-container').innerHTML = 
+                '<div class="alert alert-danger">Error loading media items</div>';
+        });
+}
+
+function filterMedia() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const filterType = document.querySelector('input[name="filterType"]:checked').value;
+    
+    filteredItems = allMediaItems.filter(item => {
+        const matchesSearch = item.gcs_path.toLowerCase().includes(searchTerm) || 
+                            (item.description && item.description.toLowerCase().includes(searchTerm));
+        
+        let matchesFilter = true;
+        if (filterType === 'images') {
+            matchesFilter = item.gcs_path.match(/\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i);
+        } else if (filterType === 'videos') {
+            matchesFilter = item.gcs_path.match(/\.(mp4|avi|mov|wmv|flv|webm|mkv)$/i);
+        }
+        
+        return matchesSearch && matchesFilter;
+    });
+    
+    currentPage = 0;
+    displayGallery();
+}
+
+function displayGallery() {
+    const container = document.getElementById('gallery-container');
+    const startIndex = currentPage * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const itemsToShow = filteredItems.slice(startIndex, endIndex);
+    
+    if (currentPage === 0) {
+        if (itemsToShow.length === 0) {
+            container.innerHTML = '<div class="text-center text-muted"><i class="fas fa-search fa-3x mb-3"></i><p>No media items found</p></div>';
+            return;
+        }
+        
+        container.innerHTML = itemsToShow.map(item => createMediaCard(item)).join('');
+    } else {
+        container.innerHTML += itemsToShow.map(item => createMediaCard(item)).join('');
+    }
+    
+    // Show/hide load more button
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    if (endIndex < filteredItems.length) {
+        loadMoreBtn.style.display = 'inline-block';
+    } else {
+        loadMoreBtn.style.display = 'none';
+    }
+}
+
+function createMediaCard(item) {
+    const fileName = getFileName(item.gcs_path);
+    const isVideo = item.gcs_path.match(/\.(mp4|avi|mov|wmv|flv|webm|mkv)$/i);
+    const isImage = item.gcs_path.match(/\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i);
+    
+    let mediaIcon = '<i class="fas fa-file fa-2x text-secondary"></i>';
+    if (isVideo) {
+        mediaIcon = '<i class="fas fa-video fa-2x text-info"></i>';
+    } else if (isImage) {
+        mediaIcon = '<i class="fas fa-image fa-2x text-success"></i>';
+    }
+    
+    return `
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm media-card" onclick="openMediaModal('${item.id}')">
+                <div class="card-body p-3 text-center">
+                    <div class="media-thumbnail mb-3">
+                        ${mediaIcon}
+                    </div>
+                    <h6 class="card-title small text-truncate">${fileName}</h6>
+                    <p class="card-text small text-muted">Click to view details</p>
+                    <div class="mt-2">
+                        <small class="text-muted">${formatFileSize(item.metadata?.size || 0)}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function openMediaModal(mediaId) {
+    currentMediaId = mediaId;
+    const item = allMediaItems.find(item => item.id === mediaId);
+    if (!item) return;
+    
+    document.getElementById('mediaModalTitle').textContent = getFileName(item.gcs_path);
+    
+    // Fetch and render contexts
+    renderContexts(item.id);
+
+    const mediaContent = document.getElementById('mediaContent');
+    const isVideo = item.gcs_path.match(/\.(mp4|avi|mov|wmv|flv|webm|mkv)$/i);
+    const isImage = item.gcs_path.match(/\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i);
+    
+    if (isImage) {
+        mediaContent.innerHTML = `
+            <div class="position-relative d-inline-block">
+                <img src="/media/${mediaId}/preview" class="img-fluid" alt="${getFileName(item.gcs_path)}">
+                <button class="btn btn-sm btn-outline-info position-absolute top-0 end-0 m-1" onclick="showMetadata('${item.gcs_path}')" title="View Image Metadata">
+                    <i class="fas fa-info-circle"></i>
+                </button>
+            </div>
+        `;
+    } else if (isVideo) {
+        mediaContent.innerHTML = `<video controls class="w-100"><source src="/media/${mediaId}/preview" type="video/mp4">Your browser does not support the video tag.</video>`;
+    } else {
+        mediaContent.innerHTML = `<div class="text-center"><i class="fas fa-file fa-5x text-secondary"></i><p class="mt-2">Preview not available</p></div>`;
+    }
+    
+    new bootstrap.Modal(document.getElementById('mediaModal')).show();
+}
+
+function renderContexts(mediaId) {
+    const contextList = document.getElementById('contextList');
+    contextList.innerHTML = '<div class="text-center"><div class="spinner-border spinner-border-sm"></div></div>';
+    
+    fetch(`/media/${mediaId}/contexts`)
+        .then(response => response.json())
+        .then(contexts => {
+            if (contexts.length === 0) {
+                contextList.innerHTML = '<p class="text-muted small">No descriptions yet.</p>';
+                return;
+            }
+            contextList.innerHTML = contexts.map(context => `
+                <div class="card card-body bg-light p-2 mb-2">
+                    <p class="mb-1 small">${context.text}</p>
+                    <div class="text-end">
+                        <button class="btn btn-sm btn-outline-secondary py-0 px-1" onclick="showEditContext('${context.id}', '${escapeQuotes(context.text)}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger py-0 px-1" onclick="deleteContext('${context.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        });
+}
+
+function addNewContext() {
+    if (!currentMediaId) return;
+    const text = document.getElementById('newContextInput').value.trim();
+    if (!text) return;
+
+    fetch(`/media/${currentMediaId}/contexts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: text })
+    })
+    .then(response => {
+        if (response.ok) {
+            document.getElementById('newContextInput').value = '';
+            renderContexts(currentMediaId);
+            showToast('Description added!', 'success');
+        } else {
+            showToast('Failed to add description.', 'danger');
+        }
+    });
+}
+
+function showEditContext(contextId, text) {
+    document.getElementById('addContextArea').style.display = 'none';
+    document.getElementById('editContextArea').style.display = 'block';
+    document.getElementById('editContextId').value = contextId;
+    document.getElementById('editContextInput').value = text;
+}
+
+function cancelEdit() {
+    document.getElementById('addContextArea').style.display = 'block';
+    document.getElementById('editContextArea').style.display = 'none';
+}
+
+function saveUpdatedContext() {
+    const contextId = document.getElementById('editContextId').value;
+    const text = document.getElementById('editContextInput').value.trim();
+    if (!currentMediaId || !contextId || !text) return;
+
+    fetch(`/media/${currentMediaId}/contexts/${contextId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: text })
+    })
+    .then(response => {
+        if (response.ok) {
+            cancelEdit();
+            renderContexts(currentMediaId);
+            showToast('Description updated!', 'success');
+        } else {
+            showToast('Failed to update description.', 'danger');
+        }
+    });
+}
+
+function deleteContext(contextId) {
+    if (!currentMediaId || !confirm('Are you sure you want to delete this description?')) return;
+
+    fetch(`/media/${currentMediaId}/contexts/${contextId}`, {
+        method: 'DELETE'
+    })
+    .then(response => {
+        if (response.ok) {
+            renderContexts(currentMediaId);
+            showToast('Description deleted!', 'success');
+        } else {
+            showToast('Failed to delete description.', 'danger');
+        }
+    });
+}
+
+function startInterview() {
+    if (!currentMediaId) return;
+    
+    // Close the current modal
+    bootstrap.Modal.getInstance(document.getElementById('mediaModal')).hide();
+    
+    // Redirect to the interview page
+    window.location.href = `/media/${currentMediaId}/gallery-interview`;
+}
+
+function escapeQuotes(str) {
+    return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+function loadMore() {
+    currentPage++;
+    displayGallery();
+}
+
+function refreshGallery() {
+    loadGallery();
+}
+
+function getFileName(gcsPath) {
+    return gcsPath.split('/').pop();
+}
+
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+function showMetadata(imagePath) {
+    const modal = new bootstrap.Modal(document.getElementById('metadataModal'));
+    modal.show();
+    
+    const metadataContent = document.getElementById('metadataContent');
+    metadataContent.innerHTML = '<div class="text-center"><div class="spinner-border"></div><p class="mt-2">Loading metadata...</p></div>';
+    
+    // Extract filename from path
+    const filename = imagePath.split('/').pop();
+    
+    fetch(`/images/${encodeURIComponent(filename)}/metadata`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                metadataContent.innerHTML = formatMetadataForDisplay(data.formatted_metadata);
+            } else {
+                metadataContent.innerHTML = `<div class="alert alert-danger">Failed to load metadata: ${data.error || 'Unknown error'}</div>`;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            metadataContent.innerHTML = '<div class="alert alert-danger">Failed to load metadata.</div>';
+        });
+}
+
+function formatMetadataForDisplay(formattedMetadata) {
+    let html = '';
+    
+    // Summary section
+    if (formattedMetadata.summary) {
+        html += `<div class="alert alert-info mb-3"><strong>Summary:</strong> ${formattedMetadata.summary}</div>`;
+    }
+    
+    // File Information
+    if (Object.keys(formattedMetadata.file_info || {}).length > 0) {
+        html += '<div class="mb-4"><h6 class="text-primary">File Information</h6><div class="row">';
+        for (const [key, value] of Object.entries(formattedMetadata.file_info)) {
+            html += `<div class="col-md-6"><strong>${key}:</strong> ${value}</div>`;
+        }
+        html += '</div></div>';
+    }
+    
+    // Camera Information
+    if (Object.keys(formattedMetadata.camera_info || {}).length > 0) {
+        html += '<div class="mb-4"><h6 class="text-primary">Camera Information</h6><div class="row">';
+        for (const [key, value] of Object.entries(formattedMetadata.camera_info)) {
+            html += `<div class="col-md-6"><strong>${key}:</strong> ${value}</div>`;
+        }
+        html += '</div></div>';
+    }
+    
+    // Capture Information
+    if (Object.keys(formattedMetadata.capture_info || {}).length > 0) {
+        html += '<div class="mb-4"><h6 class="text-primary">Capture Information</h6><div class="row">';
+        for (const [key, value] of Object.entries(formattedMetadata.capture_info)) {
+            html += `<div class="col-md-6"><strong>${key}:</strong> ${value}</div>`;
+        }
+        html += '</div></div>';
+    }
+    
+    // Technical Information
+    if (Object.keys(formattedMetadata.technical_info || {}).length > 0) {
+        html += '<div class="mb-4"><h6 class="text-primary">Technical Information</h6><div class="row">';
+        for (const [key, value] of Object.entries(formattedMetadata.technical_info)) {
+            html += `<div class="col-md-6"><strong>${key}:</strong> ${value}</div>`;
+        }
+        html += '</div></div>';
+    }
+    
+    // GPS Information
+    if (Object.keys(formattedMetadata.gps_info || {}).length > 0) {
+        html += '<div class="mb-4"><h6 class="text-primary">GPS Information</h6><div class="row">';
+        // Show decimal degrees first if present
+        if (formattedMetadata.gps_info['Latitude (decimal)'] !== undefined && formattedMetadata.gps_info['Longitude (decimal)'] !== undefined) {
+            html += `<div class="col-md-12"><strong>Latitude (decimal):</strong> ${formattedMetadata.gps_info['Latitude (decimal)']}</div>`;
+            html += `<div class="col-md-12"><strong>Longitude (decimal):</strong> ${formattedMetadata.gps_info['Longitude (decimal)']}</div>`;
+        }
+        // Show Google Maps link if present
+        if (formattedMetadata.gps_info['Google Maps']) {
+            html += `<div class="col-md-12"><a href="${formattedMetadata.gps_info['Google Maps']}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-success my-2">View on Google Maps</a></div>`;
+        }
+        // Show all other GPS fields except the above
+        for (const [key, value] of Object.entries(formattedMetadata.gps_info)) {
+            if (key !== 'Latitude (decimal)' && key !== 'Longitude (decimal)' && key !== 'Google Maps') {
+                html += `<div class="col-md-6"><strong>${key}:</strong> ${value}</div>`;
+            }
+        }
+        html += '</div></div>';
+    }
+    
+    // Other Information
+    if (Object.keys(formattedMetadata.other_info || {}).length > 0) {
+        html += '<div class="mb-4"><h6 class="text-primary">Other Information</h6><div class="row">';
+        for (const [key, value] of Object.entries(formattedMetadata.other_info)) {
+            html += `<div class="col-md-6"><strong>${key}:</strong> ${value}</div>`;
+        }
+        html += '</div></div>';
+    }
+    
+    if (html === '') {
+        html = '<div class="alert alert-warning">No metadata available for this image.</div>';
+    }
+    
+    return html;
+}
+
+function clearAllContexts() {
+    if (!confirm('Are you sure you want to delete all descriptions? This action cannot be undone.')) return;
+    
+    fetch('/clear_all_contexts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast('All contexts cleared successfully!', 'success');
+            // Refresh the gallery to update any displayed contexts
+            if (currentMediaId) {
+                renderContexts(currentMediaId);
+            }
+        } else {
+            showToast('Failed to clear contexts: ' + (data.error || 'Unknown error'), 'danger');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Failed to clear contexts.', 'danger');
+    });
+}
+</script>
+{% endblock %} 

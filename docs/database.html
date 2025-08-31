@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Schema - Photo Tales Gallery Documentation</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+        .content {
+            height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+        .nav-link {
+            transition: all 0.2s ease;
+        }
+        .nav-link:hover {
+            background-color: #f3f4f6;
+        }
+        .nav-link.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+        code {
+            background-color: #f3f4f6;
+            color: #1f2937;
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+        }
+        .schema-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            color: white;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <i class="fas fa-camera text-blue-600 text-2xl mr-3"></i>
+                    <h1 class="text-2xl font-bold text-gray-900">Photo Tales Gallery</h1>
+                    <span class="ml-3 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Documentation</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="https://github.com" class="text-gray-500 hover:text-gray-700">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="https://openai.com" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-robot text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <nav class="w-64 bg-white shadow-sm sidebar">
+            <div class="p-4">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Documentation</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="index.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-home mr-2"></i>Overview
+                        </a>
+                    </li>
+                    <li>
+                        <a href="architecture.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-sitemap mr-2"></i>Architecture
+                        </a>
+                    </li>
+                    <li>
+                        <a href="installation.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-download mr-2"></i>Installation
+                        </a>
+                    </li>
+                    <li>
+                        <a href="api.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-code mr-2"></i>API Reference
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ai-integration.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-brain mr-2"></i>AI Integration
+                        </a>
+                    </li>
+                    <li>
+                        <a href="voice-features.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-microphone mr-2"></i>Voice Features
+                        </a>
+                    </li>
+                    <li>
+                        <a href="database.html" class="nav-link active block px-3 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-database mr-2"></i>Database Schema
+                        </a>
+                    </li>
+                    <li>
+                        <a href="deployment.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-rocket mr-2"></i>Deployment
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-1 content">
+            <div class="max-w-4xl mx-auto px-6 py-8">
+                <div class="prose prose-lg max-w-none">
+                    <h1 class="text-4xl font-bold text-gray-900 mb-6">Database Schema</h1>
+                    
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-info-circle text-blue-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-blue-700">
+                                    Photo Tales Gallery uses Google Cloud Firestore as its primary database, with TinyDB for local development.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Database Overview</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-cloud text-blue-600 text-2xl mr-3"></i>
+                                <h3 class="text-lg font-semibold text-gray-900">Production: Firestore</h3>
+                            </div>
+                            <ul class="text-sm text-gray-600 space-y-2">
+                                <li>• NoSQL document database</li>
+                                <li>• Real-time synchronization</li>
+                                <li>• Automatic scaling</li>
+                                <li>• Offline support</li>
+                                <li>• Built-in security rules</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-file-alt text-green-600 text-2xl mr-3"></i>
+                                <h3 class="text-lg font-semibold text-gray-900">Development: TinyDB</h3>
+                            </div>
+                            <ul class="text-sm text-gray-600 space-y-2">
+                                <li>• JSON-based local storage</li>
+                                <li>• No external dependencies</li>
+                                <li>• Simple file-based storage</li>
+                                <li>• Easy development setup</li>
+                                <li>• Mirrors Firestore structure</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Collections & Documents</h2>
+                    
+                    <div class="space-y-6 mb-8">
+                        <!-- Media Items Collection -->
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-images text-blue-600 mr-2"></i>media_items Collection
+                            </h3>
+                            <p class="text-gray-600 mb-4">Stores metadata and information about uploaded photos and media files.</p>
+                            
+                            <div class="schema-box">
+                                <h4 class="font-bold mb-2">Document Structure</h4>
+                                <pre class="text-sm"><code>{
+  "id": "auto-generated-document-id",
+  "gcs_path": "photos/image1.jpg",
+  "filename": "image1.jpg",
+  "description": "A beautiful sunset at the beach",
+  "summary": "Sunset at the beach",
+  "tags": ["sunset", "beach", "nature", "2023"],
+  "created_at": "2024-01-15T10:30:00Z",
+  "updated_at": "2024-01-15T10:30:00Z",
+  "metadata": {
+    "file_size": 2048576,
+    "file_type": "image/jpeg",
+    "dimensions": {
+      "width": 1920,
+      "height": 1080
+    },
+    "exif_data": {
+      "DateTimeOriginal": "2023:06:15 18:30:00",
+      "Make": "Canon",
+      "Model": "EOS R5"
+    }
+  }
+}</code></pre>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Required Fields</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• <code>gcs_path</code> - Path in Google Cloud Storage</li>
+                                        <li>• <code>created_at</code> - Timestamp of creation</li>
+                                        <li>• <code>updated_at</code> - Timestamp of last update</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Optional Fields</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• <code>description</code> - User-provided description</li>
+                                        <li>• <code>summary</code> - AI-generated summary</li>
+                                        <li>• <code>tags</code> - Array of tags</li>
+                                        <li>• <code>metadata</code> - File and EXIF metadata</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contexts Subcollection -->
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-comments text-green-600 mr-2"></i>contexts Subcollection
+                            </h3>
+                            <p class="text-gray-600 mb-4">Stores conversation history and context for each media item.</p>
+                            
+                            <div class="schema-box">
+                                <h4 class="font-bold mb-2">Document Structure</h4>
+                                <pre class="text-sm"><code>{
+  "id": "auto-generated-context-id",
+  "text": "This photo was taken during our vacation in Hawaii. We were at the beach watching the sunset.",
+  "type": "interview",
+  "created_at": "2024-01-15T11:00:00Z",
+  "updated_at": "2024-01-15T11:00:00Z"
+}</code></pre>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Context Types</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• <code>interview</code> - AI conversation responses</li>
+                                        <li>• <code>description</code> - User descriptions</li>
+                                        <li>• <code>summary</code> - AI-generated summaries</li>
+                                        <li>• <code>manual</code> - Manually added context</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Usage</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• Stores conversation history</li>
+                                        <li>• Provides context for AI interviews</li>
+                                        <li>• Enables context-aware responses</li>
+                                        <li>• Maintains user input history</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Media Links Collection -->
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-link text-purple-600 mr-2"></i>media_links Collection
+                            </h3>
+                            <p class="text-gray-600 mb-4">Stores relationships between media items for creating connections and albums.</p>
+                            
+                            <div class="schema-box">
+                                <h4 class="font-bold mb-2">Document Structure</h4>
+                                <pre class="text-sm"><code>{
+  "id": "auto-generated-link-id",
+  "source_id": "media-item-doc-id",
+  "target_id": "another-media-item-doc-id",
+  "link_type": "related",
+  "created_at": "2024-01-15T12:00:00Z"
+}</code></pre>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Link Types</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• <code>related</code> - Related photos</li>
+                                        <li>• <code>album</code> - Album membership</li>
+                                        <li>• <code>sequence</code> - Sequential photos</li>
+                                        <li>• <code>duplicate</code> - Duplicate detection</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Features</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• Bidirectional relationships</li>
+                                        <li>• Flexible link types</li>
+                                        <li>• Easy querying</li>
+                                        <li>• Scalable structure</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Data Relationships</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Collection Relationships</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold mt-1">1</div>
+                                <div>
+                                    <p class="text-gray-700"><strong>Media Items → Contexts:</strong> One-to-many relationship. Each media item can have multiple context entries.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold mt-1">2</div>
+                                <div>
+                                    <p class="text-gray-700"><strong>Media Items → Media Links:</strong> Many-to-many relationship through the links collection.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold mt-1">3</div>
+                                <div>
+                                    <p class="text-gray-700"><strong>Contexts → AI Interviews:</strong> Contexts store conversation history for AI interactions.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Query Patterns</h2>
+                    
+                    <div class="space-y-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Common Queries</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Get All Media Items</h4>
+                                    <pre class="text-sm"><code>// Firestore
+db.collection('media_items').stream()
+
+// TinyDB
+db.table('media_items').all()</code></pre>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Get Media Item with Contexts</h4>
+                                    <pre class="text-sm"><code>// Firestore
+doc = db.collection('media_items').document(id).get()
+contexts = doc.reference.collection('contexts').stream()
+
+// TinyDB
+item = db.table('media_items').get(doc_id=id)
+contexts = db.table('contexts').search(Query().media_id == id)</code></pre>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Search by Tags</h4>
+                                    <pre class="text-sm"><code>// Firestore
+db.collection('media_items').where('tags', 'array_contains', 'sunset').stream()
+
+// TinyDB
+db.table('media_items').search(Query().tags.any(['sunset']))</code></pre>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Get Related Media</h4>
+                                    <pre class="text-sm"><code>// Firestore
+links = db.collection('media_links').where('source_id', '==', media_id).stream()
+related_ids = [link.get('target_id') for link in links]</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Indexing Strategy</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Firestore Indexes</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Single Field Indexes</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• <code>gcs_path</code> - For file path lookups</li>
+                                    <li>• <code>created_at</code> - For chronological ordering</li>
+                                    <li>• <code>updated_at</code> - For recent updates</li>
+                                    <li>• <code>tags</code> - For tag-based searches</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Composite Indexes</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• <code>tags + created_at</code> - Tag searches with ordering</li>
+                                    <li>• <code>source_id + link_type</code> - Link queries</li>
+                                    <li>• <code>type + created_at</code> - Context filtering</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Data Migration</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Local to Production</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">TinyDB to Firestore</h4>
+                                <pre class="text-sm"><code># Export TinyDB data
+python migrate_data.py --export-tinydb
+
+# Import to Firestore
+python migrate_data.py --import-firestore</code></pre>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Data Validation</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Schema validation before migration</li>
+                                    <li>• Data integrity checks</li>
+                                    <li>• Rollback capabilities</li>
+                                    <li>• Incremental migration support</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Security Rules</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Firestore Security</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Basic Rules</h4>
+                                <pre class="text-sm"><code>rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow read/write for authenticated users
+    match /media_items/{document} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Allow access to contexts subcollection
+    match /media_items/{document}/contexts/{context} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Allow access to media links
+    match /media_links/{document} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}</code></pre>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Advanced Rules</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• User-based access control</li>
+                                    <li>• Data validation rules</li>
+                                    <li>• Rate limiting</li>
+                                    <li>• Field-level security</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Performance Considerations</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Query Optimization</h3>
+                            <ul class="text-sm text-gray-600 space-y-2">
+                                <li>• Use composite indexes for complex queries</li>
+                                <li>• Limit result sets with pagination</li>
+                                <li>• Cache frequently accessed data</li>
+                                <li>• Use streaming for large datasets</li>
+                                <li>• Optimize field selection</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Storage Optimization</h3>
+                            <ul class="text-sm text-gray-600 space-y-2">
+                                <li>• Compress large text fields</li>
+                                <li>• Use efficient data types</li>
+                                <li>• Archive old context data</li>
+                                <li>• Implement data retention policies</li>
+                                <li>• Monitor storage costs</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-8">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-check-circle text-green-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-green-700">
+                                    <strong>Database Benefits:</strong> The Firestore schema provides a scalable, flexible structure for storing photo metadata, 
+                                    conversation history, and relationships while maintaining excellent query performance and real-time synchronization.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Simple navigation highlighting
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

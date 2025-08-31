@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture - Photo Tales Gallery Documentation</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+        .content {
+            height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+        .nav-link {
+            transition: all 0.2s ease;
+        }
+        .nav-link:hover {
+            background-color: #f3f4f6;
+        }
+        .nav-link.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+        code {
+            background-color: #f3f4f6;
+            color: #1f2937;
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+        }
+        .architecture-diagram {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 1rem;
+            padding: 2rem;
+            color: white;
+        }
+        .component-box {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <i class="fas fa-camera text-blue-600 text-2xl mr-3"></i>
+                    <h1 class="text-2xl font-bold text-gray-900">Photo Tales Gallery</h1>
+                    <span class="ml-3 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Documentation</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="https://github.com" class="text-gray-500 hover:text-gray-700">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="https://openai.com" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-robot text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <nav class="w-64 bg-white shadow-sm sidebar">
+            <div class="p-4">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Documentation</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="index.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-home mr-2"></i>Overview
+                        </a>
+                    </li>
+                    <li>
+                        <a href="architecture.html" class="nav-link active block px-3 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-sitemap mr-2"></i>Architecture
+                        </a>
+                    </li>
+                    <li>
+                        <a href="installation.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-download mr-2"></i>Installation
+                        </a>
+                    </li>
+                    <li>
+                        <a href="api.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-code mr-2"></i>API Reference
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ai-integration.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-brain mr-2"></i>AI Integration
+                        </a>
+                    </li>
+                    <li>
+                        <a href="voice-features.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-microphone mr-2"></i>Voice Features
+                        </a>
+                    </li>
+                    <li>
+                        <a href="database.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-database mr-2"></i>Database Schema
+                        </a>
+                    </li>
+                    <li>
+                        <a href="deployment.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-rocket mr-2"></i>Deployment
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-1 content">
+            <div class="max-w-4xl mx-auto px-6 py-8">
+                <div class="prose prose-lg max-w-none">
+                    <h1 class="text-4xl font-bold text-gray-900 mb-6">System Architecture</h1>
+                    
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-info-circle text-blue-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-blue-700">
+                                    Photo Tales Gallery follows a modern client-server architecture with cloud-native components and AI integration.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">High-Level Architecture</h2>
+                    
+                    <div class="architecture-diagram mb-8">
+                        <h3 class="text-xl font-bold mb-4 text-center">System Overview</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="component-box">
+                                <h4 class="font-bold mb-2"><i class="fas fa-desktop mr-2"></i>Frontend Layer</h4>
+                                <ul class="text-sm space-y-1">
+                                    <li>• React 18 + TypeScript</li>
+                                    <li>• Tailwind CSS + Radix UI</li>
+                                    <li>• Web Speech API</li>
+                                    <li>• React Query</li>
+                                </ul>
+                            </div>
+                            <div class="component-box">
+                                <h4 class="font-bold mb-2"><i class="fas fa-server mr-2"></i>Backend Layer</h4>
+                                <ul class="text-sm space-y-1">
+                                    <li>• Python Flask</li>
+                                    <li>• OpenAI Integration</li>
+                                    <li>• Image Processing</li>
+                                    <li>• API Gateway</li>
+                                </ul>
+                            </div>
+                            <div class="component-box">
+                                <h4 class="font-bold mb-2"><i class="fas fa-cloud mr-2"></i>Cloud Layer</h4>
+                                <ul class="text-sm space-y-1">
+                                    <li>• Google Cloud Storage</li>
+                                    <li>• Google Cloud Firestore</li>
+                                    <li>• OpenAI API</li>
+                                    <li>• Authentication</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Component Architecture</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-desktop text-blue-600 mr-2"></i>Frontend Components
+                            </h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Core Components</h4>
+                                    <ul class="text-sm text-gray-600 mt-2 space-y-1">
+                                        <li><code>PhotoGallery.tsx</code> - Main photo grid and display</li>
+                                        <li><code>PhotoCard.tsx</code> - Individual photo card component</li>
+                                        <li><code>PhotoModal.tsx</code> - Photo detail modal</li>
+                                        <li><code>SearchBar.tsx</code> - Search and filter functionality</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">AI Interface Components</h4>
+                                    <ul class="text-sm text-gray-600 mt-2 space-y-1">
+                                        <li><code>AIInterfaceSelector.tsx</code> - Mode selection</li>
+                                        <li><code>AIInterview.tsx</code> - Avatar-based interviews</li>
+                                        <li><code>AITextInterface.tsx</code> - Text-based chat</li>
+                                        <li><code>AnamAvatar.tsx</code> - 3D avatar integration</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Utility Components</h4>
+                                    <ul class="text-sm text-gray-600 mt-2 space-y-1">
+                                        <li><code>MetadataPanel.tsx</code> - Photo metadata display</li>
+                                        <li><code>ContextPanel.tsx</code> - Conversation history</li>
+                                        <li><code>TagEditor.tsx</code> - Tag management</li>
+                                        <li><code>ThemeToggle.tsx</code> - Dark/light mode</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-server text-green-600 mr-2"></i>Backend Components
+                            </h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Core Services</h4>
+                                    <ul class="text-sm text-gray-600 mt-2 space-y-1">
+                                        <li><code>main.py</code> - Flask application entry point</li>
+                                        <li><code>local_api.py</code> - API endpoints and routing</li>
+                                        <li><code>firestore_db.py</code> - Database operations</li>
+                                        <li><code>local_db.py</code> - Local development database</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">AI Services</h4>
+                                    <ul class="text-sm text-gray-600 mt-2 space-y-1">
+                                        <li><code>interviewer_bot.py</code> - OpenAI integration</li>
+                                        <li><code>interview_bot.py</code> - Interview management</li>
+                                        <li><code>prompts.py</code> - AI prompt definitions</li>
+                                        <li><code>image_metadata.py</code> - Image processing</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Configuration</h4>
+                                    <ul class="text-sm text-gray-600 mt-2 space-y-1">
+                                        <li><code>config.env</code> - Environment variables</li>
+                                        <li><code>requirements.txt</code> - Python dependencies</li>
+                                        <li><code>Dockerfile</code> - Container configuration</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Data Flow Architecture</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Request Flow</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">1</div>
+                                <div class="flex-1">
+                                    <p class="text-gray-700"><strong>User Interaction:</strong> User interacts with frontend (photo selection, voice input, etc.)</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">2</div>
+                                <div class="flex-1">
+                                    <p class="text-gray-700"><strong>API Request:</strong> Frontend makes HTTP request to Flask backend</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">3</div>
+                                <div class="flex-1">
+                                    <p class="text-gray-700"><strong>Backend Processing:</strong> Flask routes request to appropriate handler</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">4</div>
+                                <div class="flex-1">
+                                    <p class="text-gray-700"><strong>External Services:</strong> Backend calls OpenAI API, Google Cloud services</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">5</div>
+                                <div class="flex-1">
+                                    <p class="text-gray-700"><strong>Data Storage:</strong> Results stored in Firestore database</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">6</div>
+                                <div class="flex-1">
+                                    <p class="text-gray-700"><strong>Response:</strong> Backend returns JSON response to frontend</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">7</div>
+                                <div class="flex-1">
+                                    <p class="text-gray-700"><strong>UI Update:</strong> Frontend updates UI with new data</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Technology Stack Details</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Frontend Stack</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <h4 class="font-medium text-gray-900">React Ecosystem</h4>
+                                    <ul class="text-sm text-gray-600 mt-1">
+                                        <li>• React 18 with TypeScript</li>
+                                        <li>• React Router for navigation</li>
+                                        <li>• React Query for state management</li>
+                                        <li>• React Hook Form for forms</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">UI & Styling</h4>
+                                    <ul class="text-sm text-gray-600 mt-1">
+                                        <li>• Tailwind CSS for styling</li>
+                                        <li>• Radix UI for components</li>
+                                        <li>• Lucide React for icons</li>
+                                        <li>• Next-themes for theming</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Build Tools</h4>
+                                    <ul class="text-sm text-gray-600 mt-1">
+                                        <li>• Vite for fast development</li>
+                                        <li>• TypeScript for type safety</li>
+                                        <li>• ESLint for code quality</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Backend Stack</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Web Framework</h4>
+                                    <ul class="text-sm text-gray-600 mt-1">
+                                        <li>• Flask 3.0.3</li>
+                                        <li>• Flask-CORS for cross-origin</li>
+                                        <li>• Gunicorn for production</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Data & Storage</h4>
+                                    <ul class="text-sm text-gray-600 mt-1">
+                                        <li>• Google Cloud Firestore</li>
+                                        <li>• Google Cloud Storage</li>
+                                        <li>• TinyDB for local development</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">AI & Processing</h4>
+                                    <ul class="text-sm text-gray-600 mt-1">
+                                        <li>• OpenAI GPT-4o-mini</li>
+                                        <li>• Pillow for image processing</li>
+                                        <li>• Python-dotenv for config</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Security Architecture</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-3">Authentication & Authorization</h3>
+                                <ul class="text-sm text-gray-600 space-y-2">
+                                    <li>• Google Cloud IAM for service accounts</li>
+                                    <li>• Environment-based API key management</li>
+                                    <li>• CORS configuration for frontend access</li>
+                                    <li>• Secure session management</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-3">Data Security</h3>
+                                <ul class="text-sm text-gray-600 space-y-2">
+                                    <li>• Encrypted data transmission (HTTPS)</li>
+                                    <li>• Secure API key storage</li>
+                                    <li>• Input validation and sanitization</li>
+                                    <li>• Rate limiting for API endpoints</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Scalability Considerations</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                                <i class="fas fa-database text-blue-600 mr-2"></i>Database
+                            </h3>
+                            <ul class="text-sm text-gray-600 space-y-2">
+                                <li>• Firestore auto-scaling</li>
+                                <li>• Efficient query patterns</li>
+                                <li>• Index optimization</li>
+                                <li>• Data pagination</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                                <i class="fas fa-server text-green-600 mr-2"></i>Application
+                            </h3>
+                            <ul class="text-sm text-gray-600 space-y-2">
+                                <li>• Stateless Flask design</li>
+                                <li>• Horizontal scaling ready</li>
+                                <li>• Load balancer support</li>
+                                <li>• Container deployment</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                                <i class="fas fa-cloud text-purple-600 mr-2"></i>Storage
+                            </h3>
+                            <ul class="text-sm text-gray-600 space-y-2">
+                                <li>• GCS auto-scaling</li>
+                                <li>• CDN integration ready</li>
+                                <li>• Image optimization</li>
+                                <li>• Backup strategies</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-8">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-check-circle text-green-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-green-700">
+                                    <strong>Architecture Benefits:</strong> The system is designed for scalability, maintainability, and extensibility. 
+                                    The separation of concerns and cloud-native approach allows for easy scaling and feature additions.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Simple navigation highlighting
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

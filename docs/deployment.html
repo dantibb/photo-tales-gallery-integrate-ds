@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deployment - Photo Tales Gallery Documentation</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+        .content {
+            height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+        .nav-link {
+            transition: all 0.2s ease;
+        }
+        .nav-link:hover {
+            background-color: #f3f4f6;
+        }
+        .nav-link.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+        code {
+            background-color: #f3f4f6;
+            color: #1f2937;
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+        }
+        .deployment-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            color: white;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <i class="fas fa-camera text-blue-600 text-2xl mr-3"></i>
+                    <h1 class="text-2xl font-bold text-gray-900">Photo Tales Gallery</h1>
+                    <span class="ml-3 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Documentation</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="https://github.com" class="text-gray-500 hover:text-gray-700">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="https://openai.com" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-robot text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <nav class="w-64 bg-white shadow-sm sidebar">
+            <div class="p-4">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Documentation</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="index.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-home mr-2"></i>Overview
+                        </a>
+                    </li>
+                    <li>
+                        <a href="architecture.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-sitemap mr-2"></i>Architecture
+                        </a>
+                    </li>
+                    <li>
+                        <a href="installation.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-download mr-2"></i>Installation
+                        </a>
+                    </li>
+                    <li>
+                        <a href="api.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-code mr-2"></i>API Reference
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ai-integration.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-brain mr-2"></i>AI Integration
+                        </a>
+                    </li>
+                    <li>
+                        <a href="voice-features.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-microphone mr-2"></i>Voice Features
+                        </a>
+                    </li>
+                    <li>
+                        <a href="database.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-database mr-2"></i>Database Schema
+                        </a>
+                    </li>
+                    <li>
+                        <a href="deployment.html" class="nav-link active block px-3 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-rocket mr-2"></i>Deployment
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-1 content">
+            <div class="max-w-4xl mx-auto px-6 py-8">
+                <div class="prose prose-lg max-w-none">
+                    <h1 class="text-4xl font-bold text-gray-900 mb-6">Deployment Guide</h1>
+                    
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-info-circle text-blue-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-blue-700">
+                                    This guide covers production deployment options for Photo Tales Gallery, including cloud platforms and containerization.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Deployment Options</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <div class="flex items-center mb-4">
+                                <i class="fab fa-google text-blue-600 text-2xl mr-3"></i>
+                                <h3 class="text-lg font-semibold text-gray-900">Google Cloud Platform</h3>
+                            </div>
+                            <ul class="text-sm text-gray-600 space-y-2">
+                                <li>• Cloud Run for containers</li>
+                                <li>• App Engine for Python</li>
+                                <li>• Cloud Storage integration</li>
+                                <li>• Firestore database</li>
+                                <li>• Load balancing</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <div class="flex items-center mb-4">
+                                <i class="fab fa-aws text-orange-600 text-2xl mr-3"></i>
+                                <h3 class="text-lg font-semibold text-gray-900">AWS</h3>
+                            </div>
+                            <ul class="text-sm text-gray-600 space-y-2">
+                                <li>• ECS/EKS for containers</li>
+                                <li>• Lambda for serverless</li>
+                                <li>• S3 for storage</li>
+                                <li>• DynamoDB for database</li>
+                                <li>• CloudFront CDN</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <div class="flex items-center mb-4">
+                                <i class="fab fa-docker text-blue-500 text-2xl mr-3"></i>
+                                <h3 class="text-lg font-semibold text-gray-900">Docker</h3>
+                            </div>
+                            <ul class="text-sm text-gray-600 space-y-2">
+                                <li>• Containerized deployment</li>
+                                <li>• Multi-stage builds</li>
+                                <li>• Docker Compose</li>
+                                <li>• Kubernetes ready</li>
+                                <li>• Portability</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Google Cloud Platform Deployment</h2>
+                    
+                    <div class="space-y-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fab fa-google text-blue-600 mr-2"></i>Cloud Run Deployment
+                            </h3>
+                            <p class="text-gray-600 mb-4">Deploy the application as containers on Google Cloud Run for automatic scaling and serverless operation.</p>
+                            
+                            <div class="deployment-box">
+                                <h4 class="font-bold mb-2">Deployment Steps</h4>
+                                <ol class="text-sm space-y-1">
+                                    <li>1. Build and push Docker images</li>
+                                    <li>2. Deploy to Cloud Run</li>
+                                    <li>3. Configure environment variables</li>
+                                    <li>4. Set up custom domain</li>
+                                    <li>5. Configure SSL certificates</li>
+                                </ol>
+                            </div>
+
+                            <h4 class="font-medium text-gray-900 mb-3 mt-6">Commands</h4>
+                            <pre><code># Build and push Docker image
+docker build -t gcr.io/PROJECT_ID/photo-tales-gallery .
+docker push gcr.io/PROJECT_ID/photo-tales-gallery
+
+# Deploy to Cloud Run
+gcloud run deploy photo-tales-gallery \
+  --image gcr.io/PROJECT_ID/photo-tales-gallery \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --set-env-vars "OPENAI_API_KEY=your-key"</code></pre>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-cloud text-blue-600 mr-2"></i>App Engine Deployment
+                            </h3>
+                            <p class="text-gray-600 mb-4">Deploy the Python backend to Google App Engine for managed scaling and infrastructure.</p>
+                            
+                            <h4 class="font-medium text-gray-900 mb-3">app.yaml Configuration</h4>
+                            <pre><code>runtime: python39
+entrypoint: gunicorn -b :$PORT local_api:app
+
+env_variables:
+  OPENAI_API_KEY: "your-openai-api-key"
+  GCS_BUCKET_NAME: "your-bucket-name"
+  FIRESTORE_DATABASE_NAME: "(default)"
+
+automatic_scaling:
+  target_cpu_utilization: 0.6
+  min_instances: 1
+  max_instances: 10
+
+handlers:
+- url: /static
+  static_dir: static
+- url: /.*
+  script: auto</code></pre>
+
+                            <h4 class="font-medium text-gray-900 mb-3 mt-6">Deploy Command</h4>
+                            <pre><code>gcloud app deploy</code></pre>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Docker Deployment</h2>
+                    
+                    <div class="space-y-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fab fa-docker text-blue-500 mr-2"></i>Docker Configuration
+                            </h3>
+                            <p class="text-gray-600 mb-4">Containerize the application for consistent deployment across different environments.</p>
+                            
+                            <h4 class="font-medium text-gray-900 mb-3">Dockerfile</h4>
+                            <pre><code># Multi-stage build for production
+FROM node:18-alpine AS frontend-builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npm run build
+
+FROM python:3.9-slim AS backend-builder
+WORKDIR /app
+COPY backend/requirements.txt .
+RUN pip install -r requirements.txt
+
+FROM python:3.9-slim
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    nginx \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy backend
+COPY --from=backend-builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+COPY backend/ .
+
+# Copy frontend build
+COPY --from=frontend-builder /app/dist /app/static
+
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Expose port
+EXPOSE 80
+
+# Start nginx and backend
+CMD ["sh", "-c", "python local_api.py & nginx -g 'daemon off;'"]</code></pre>
+
+                            <h4 class="font-medium text-gray-900 mb-3 mt-6">Docker Compose</h4>
+                            <pre><code>version: '3.8'
+services:
+  photo-tales-gallery:
+    build: .
+    ports:
+      - "80:80"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GCS_BUCKET_NAME=${GCS_BUCKET_NAME}
+      - FIRESTORE_DATABASE_NAME=${FIRESTORE_DATABASE_NAME}
+    volumes:
+      - ./uploads:/app/uploads
+    restart: unless-stopped</code></pre>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Environment Configuration</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Production Environment Variables</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Required Variables</h4>
+                                <pre><code># OpenAI Configuration
+OPENAI_API_KEY=sk-your-production-api-key
+
+# Google Cloud Configuration
+GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account.json
+GCS_BUCKET_NAME=your-production-bucket
+FIRESTORE_DATABASE_NAME=(default)
+
+# Flask Configuration
+FLASK_SECRET_KEY=your-production-secret-key
+FLASK_ENV=production
+
+# Application Configuration
+DEBUG=false
+LOG_LEVEL=INFO</code></pre>
+                            </div>
+
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Optional Variables</h4>
+                                <pre><code># CORS Configuration
+CORS_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
+
+# Rate Limiting
+RATE_LIMIT_REQUESTS=100
+RATE_LIMIT_WINDOW=3600
+
+# File Upload
+MAX_FILE_SIZE=10485760
+ALLOWED_EXTENSIONS=jpg,jpeg,png,gif,mp4,mov
+
+# AI Configuration
+OPENAI_MODEL=gpt-4o-mini
+OPENAI_MAX_TOKENS=300</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">SSL & Domain Configuration</h2>
+                    
+                    <div class="space-y-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-lock text-green-600 mr-2"></i>SSL Certificate Setup
+                            </h3>
+                            <p class="text-gray-600 mb-4">Configure HTTPS for secure communication, especially important for voice features.</p>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Cloud Run SSL</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• Automatic SSL with custom domains</li>
+                                        <li>• Let's Encrypt certificates</li>
+                                        <li>• Automatic renewal</li>
+                                        <li>• HTTP/2 support</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">App Engine SSL</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• Built-in SSL certificates</li>
+                                        <li>• Custom domain mapping</li>
+                                        <li>• Automatic HTTPS redirect</li>
+                                        <li>• Security headers</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <h4 class="font-medium text-gray-900 mb-3 mt-6">Custom Domain Setup</h4>
+                            <pre><code># Map custom domain to Cloud Run
+gcloud run domain-mappings create \
+  --service photo-tales-gallery \
+  --domain yourdomain.com \
+  --region us-central1
+
+# Verify domain ownership
+gcloud domains verify yourdomain.com</code></pre>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Monitoring & Logging</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-chart-line text-blue-600 mr-2"></i>Monitoring
+                            </h3>
+                            <ul class="text-sm text-gray-600 space-y-2">
+                                <li>• Google Cloud Monitoring</li>
+                                <li>• Application performance metrics</li>
+                                <li>• Error tracking and alerting</li>
+                                <li>• Resource utilization monitoring</li>
+                                <li>• Custom dashboards</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-file-alt text-green-600 mr-2"></i>Logging
+                            </h3>
+                            <ul class="text-sm text-gray-600 space-y-2">
+                                <li>• Google Cloud Logging</li>
+                                <li>• Structured logging</li>
+                                <li>• Log aggregation and search</li>
+                                <li>• Error reporting</li>
+                                <li>• Log retention policies</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Scaling & Performance</h2>
+                    
+                    <div class="space-y-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Auto-scaling Configuration</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Cloud Run Scaling</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• Automatic scaling based on requests</li>
+                                        <li>• Scale to zero when idle</li>
+                                        <li>• Configurable concurrency</li>
+                                        <li>• Memory and CPU limits</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">App Engine Scaling</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• Automatic instance scaling</li>
+                                        <li>• Manual scaling options</li>
+                                        <li>• Instance class selection</li>
+                                        <li>• Warm-up requests</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Performance Optimization</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Frontend Optimization</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• Static asset compression</li>
+                                        <li>• CDN for global delivery</li>
+                                        <li>• Image optimization</li>
+                                        <li>• Lazy loading</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Backend Optimization</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• Database query optimization</li>
+                                        <li>• Caching strategies</li>
+                                        <li>• Connection pooling</li>
+                                        <li>• Async processing</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Backup & Recovery</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Data Protection Strategy</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Database Backups</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Firestore automatic backups</li>
+                                    <li>• Point-in-time recovery</li>
+                                    <li>• Cross-region replication</li>
+                                    <li>• Backup retention policies</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">File Storage</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Cloud Storage versioning</li>
+                                    <li>• Object lifecycle management</li>
+                                    <li>• Cross-region replication</li>
+                                    <li>• Disaster recovery plans</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Security Considerations</h2>
+                    
+                    <div class="space-y-4 mb-8">
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <h4 class="font-medium text-yellow-800">API Key Security</h4>
+                                    <p class="text-sm text-yellow-700 mt-1">
+                                        Store API keys securely using environment variables or secret management services. Never commit keys to version control.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <h4 class="font-medium text-yellow-800">HTTPS Requirements</h4>
+                                    <p class="text-sm text-yellow-700 mt-1">
+                                        Voice features require HTTPS in production. Ensure SSL certificates are properly configured.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <h4 class="font-medium text-yellow-800">CORS Configuration</h4>
+                                    <p class="text-sm text-yellow-700 mt-1">
+                                        Configure CORS properly to allow only trusted domains to access your API endpoints.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-8">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-check-circle text-green-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-green-700">
+                                    <strong>Deployment Benefits:</strong> The deployment options provide scalable, secure, and maintainable production environments 
+                                    with automatic scaling, monitoring, and backup capabilities for reliable operation.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Simple navigation highlighting
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

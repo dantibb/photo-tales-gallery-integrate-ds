@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Integration - Photo Tales Gallery Documentation</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+        .content {
+            height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+        .nav-link {
+            transition: all 0.2s ease;
+        }
+        .nav-link:hover {
+            background-color: #f3f4f6;
+        }
+        .nav-link.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+        code {
+            background-color: #f3f4f6;
+            color: #1f2937;
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+        }
+        .prompt-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            color: white;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <i class="fas fa-camera text-blue-600 text-2xl mr-3"></i>
+                    <h1 class="text-2xl font-bold text-gray-900">Photo Tales Gallery</h1>
+                    <span class="ml-3 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Documentation</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="https://github.com" class="text-gray-500 hover:text-gray-700">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="https://openai.com" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-robot text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <nav class="w-64 bg-white shadow-sm sidebar">
+            <div class="p-4">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Documentation</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="index.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-home mr-2"></i>Overview
+                        </a>
+                    </li>
+                    <li>
+                        <a href="architecture.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-sitemap mr-2"></i>Architecture
+                        </a>
+                    </li>
+                    <li>
+                        <a href="installation.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-download mr-2"></i>Installation
+                        </a>
+                    </li>
+                    <li>
+                        <a href="api.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-code mr-2"></i>API Reference
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ai-integration.html" class="nav-link active block px-3 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-brain mr-2"></i>AI Integration
+                        </a>
+                    </li>
+                    <li>
+                        <a href="voice-features.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-microphone mr-2"></i>Voice Features
+                        </a>
+                    </li>
+                    <li>
+                        <a href="database.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-database mr-2"></i>Database Schema
+                        </a>
+                    </li>
+                    <li>
+                        <a href="deployment.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-rocket mr-2"></i>Deployment
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-1 content">
+            <div class="max-w-4xl mx-auto px-6 py-8">
+                <div class="prose prose-lg max-w-none">
+                    <h1 class="text-4xl font-bold text-gray-900 mb-6">AI Integration</h1>
+                    
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-info-circle text-blue-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-blue-700">
+                                    Photo Tales Gallery integrates OpenAI's GPT-4o-mini model for intelligent photo analysis, conversational interviews, and automated content generation.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">OpenAI Integration Overview</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-comments text-blue-600 text-2xl mr-3"></i>
+                                <h3 class="text-lg font-semibold text-gray-900">Conversational AI</h3>
+                            </div>
+                            <p class="text-gray-600">Interactive interviews that help users remember and document photo stories through natural conversation.</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-tags text-green-600 text-2xl mr-3"></i>
+                                <h3 class="text-lg font-semibold text-gray-900">Content Generation</h3>
+                            </div>
+                            <p class="text-gray-600">Automatic generation of summaries, tags, and descriptions based on photo content and context.</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-image text-purple-600 text-2xl mr-3"></i>
+                                <h3 class="text-lg font-semibold text-gray-900">Image Analysis</h3>
+                            </div>
+                            <p class="text-gray-600">Visual analysis of photos to extract content, objects, scenes, and generate relevant metadata.</p>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">AI Models & Configuration</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Primary Model: GPT-4o-mini</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Model Specifications</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• <strong>Model:</strong> gpt-4o-mini</li>
+                                    <li>• <strong>Max Tokens:</strong> 300 (conversational)</li>
+                                    <li>• <strong>Temperature:</strong> 0.7 (creative but focused)</li>
+                                    <li>• <strong>Cost:</strong> ~$0.00015 per 1K tokens</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Capabilities</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Text generation and conversation</li>
+                                    <li>• Image analysis (base64 encoded)</li>
+                                    <li>• Context-aware responses</li>
+                                    <li>• Multi-turn conversations</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">AI Prompts & System Design</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Prompt Architecture</h3>
+                        <p class="text-gray-600 mb-4">All AI prompts are centralized in <code>backend/prompts.py</code> for easy maintenance and consistency.</p>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Memory Gatherer Prompt</h4>
+                                <div class="prompt-box">
+                                    <p class="text-sm leading-relaxed">
+                                        You are "Memory Gatherer," an interviewer specializing in finding details and facts about a person. 
+                                        Your goal is to help users remember and document the story behind their images through engaging, 
+                                        specific questions that build upon previous context.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Summary Generation Prompt</h4>
+                                <div class="prompt-box">
+                                    <p class="text-sm leading-relaxed">
+                                        Write a summary for this image based ONLY on the context information provided. 
+                                        Use exactly these labels: "Title:", "Summary:" and base your summary ONLY on the context information provided.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Context Enhancement</h4>
+                                <div class="prompt-box">
+                                    <p class="text-sm leading-relaxed">
+                                        When existing context is available, the system enhances prompts to build upon previous information 
+                                        rather than asking basic questions, creating more engaging and personalized conversations.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">AI Integration Points</h2>
+                    
+                    <div class="space-y-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-comments text-blue-600 mr-2"></i>Interview System
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">File: <code>backend/interviewer_bot.py</code></h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• <code>run_interview_chat()</code> - Main conversation function</li>
+                                        <li>• Context-aware prompt enhancement</li>
+                                        <li>• Image analysis integration</li>
+                                        <li>• Conversation history management</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Key Features</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• Multi-turn conversations</li>
+                                        <li>• Context building over time</li>
+                                        <li>• Image + text analysis</li>
+                                        <li>• Personality consistency</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-tags text-green-600 mr-2"></i>Content Generation
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">File: <code>backend/local_api.py</code></h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• <code>generate_summary()</code> - Photo summaries</li>
+                                        <li>• <code>generate_tags()</code> - Automatic tagging</li>
+                                        <li>• <code>generate_photographer_summary()</code> - User insights</li>
+                                        <li>• <code>generate_year_tags()</code> - Metadata extraction</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Generation Types</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• Descriptive summaries</li>
+                                        <li>• Relevant tags</li>
+                                        <li>• Personal insights</li>
+                                        <li>• Metadata enhancement</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-image text-purple-600 mr-2"></i>Image Analysis
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Processing Pipeline</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• Image resizing (1024x1024 max)</li>
+                                        <li>• JPEG compression</li>
+                                        <li>• Base64 encoding</li>
+                                        <li>• GPT-4o-mini analysis</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Analysis Capabilities</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• Scene recognition</li>
+                                        <li>• Object detection</li>
+                                        <li>• Content description</li>
+                                        <li>• Contextual understanding</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">API Integration Details</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">OpenAI API Calls</h3>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">1. Conversational Interview</h4>
+                                <pre><code>response = openai.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_input}
+    ],
+    max_tokens=300,
+    temperature=0.7
+)</code></pre>
+                            </div>
+
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">2. Image Analysis</h4>
+                                <pre><code>response = openai.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": "Analyze this image and generate tags"},
+                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{encoded_image}"}}
+            ]
+        }
+    ],
+    max_tokens=150
+)</code></pre>
+                            </div>
+
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">3. Summary Generation</h4>
+                                <pre><code>response = openai.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": summary_prompt},
+        {"role": "user", "content": context_text}
+    ],
+    max_tokens=200,
+    temperature=0.5
+)</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Context-Aware AI Features</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Conversation Memory</h3>
+                            <ul class="text-sm text-gray-600 space-y-2">
+                                <li>• Maintains conversation history across sessions</li>
+                                <li>• Builds context from previous interactions</li>
+                                <li>• Avoids repetitive questions</li>
+                                <li>• Creates personalized experiences</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Adaptive Prompts</h3>
+                            <ul class="text-sm text-gray-600 space-y-2">
+                                <li>• Dynamic prompt enhancement based on context</li>
+                                <li>• Progressive question complexity</li>
+                                <li>• Contextual follow-up questions</li>
+                                <li>• Personalized interaction style</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Error Handling & Fallbacks</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-3">API Error Handling</h3>
+                                <ul class="text-sm text-gray-600 space-y-2">
+                                    <li>• OpenAI API timeout handling</li>
+                                    <li>• Rate limit management</li>
+                                    <li>• Network error recovery</li>
+                                    <li>• Graceful degradation</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-3">Fallback Strategies</h3>
+                                <ul class="text-sm text-gray-600 space-y-2">
+                                    <li>• Default responses when AI fails</li>
+                                    <li>• Cached responses for common queries</li>
+                                    <li>• Manual override options</li>
+                                    <li>• User notification of issues</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Cost Management</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Token Optimization</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Image Processing</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Resize to 1024x1024 max</li>
+                                    <li>• JPEG compression</li>
+                                    <li>• Base64 encoding</li>
+                                    <li>• ~$0.00015 per image</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Text Generation</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Limited context length</li>
+                                    <li>• Efficient prompt design</li>
+                                    <li>• Cached responses</li>
+                                    <li>• ~$0.00015 per 1K tokens</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Cost Controls</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Rate limiting</li>
+                                    <li>• Usage monitoring</li>
+                                    <li>• Budget alerts</li>
+                                    <li>• Fallback options</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Configuration & Environment</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Environment Variables</h3>
+                        <pre><code># OpenAI Configuration
+OPENAI_API_KEY=your-openai-api-key-here
+
+# Model Configuration (optional)
+OPENAI_MODEL=gpt-4o-mini
+OPENAI_MAX_TOKENS=300
+OPENAI_TEMPERATURE=0.7</code></pre>
+                        
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 mt-6">Model Selection</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Recommended Models</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• <strong>gpt-4o-mini:</strong> Best balance of cost/performance</li>
+                                    <li>• <strong>gpt-4o:</strong> Higher quality, higher cost</li>
+                                    <li>• <strong>gpt-3.5-turbo:</strong> Lower cost, good performance</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Model Switching</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Configurable via API parameters</li>
+                                    <li>• Per-request model selection</li>
+                                    <li>• Fallback model support</li>
+                                    <li>• Cost optimization options</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-8">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-check-circle text-green-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-green-700">
+                                    <strong>AI Integration Benefits:</strong> The OpenAI integration provides intelligent, context-aware interactions 
+                                    that help users discover and document the stories behind their photos through natural conversation and automated analysis.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Simple navigation highlighting
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

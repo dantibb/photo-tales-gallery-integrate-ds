@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Tales Gallery - Documentation</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+        .content {
+            height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+        .nav-link {
+            transition: all 0.2s ease;
+        }
+        .nav-link:hover {
+            background-color: #f3f4f6;
+        }
+        .nav-link.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+        code {
+            background-color: #f3f4f6;
+            color: #1f2937;
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <i class="fas fa-camera text-blue-600 text-2xl mr-3"></i>
+                    <h1 class="text-2xl font-bold text-gray-900">Photo Tales Gallery</h1>
+                    <span class="ml-3 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Documentation</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="https://github.com" class="text-gray-500 hover:text-gray-700">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="https://openai.com" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-robot text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <nav class="w-64 bg-white shadow-sm sidebar">
+            <div class="p-4">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Documentation</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="index.html" class="nav-link active block px-3 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-home mr-2"></i>Overview
+                        </a>
+                    </li>
+                    <li>
+                        <a href="architecture.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-sitemap mr-2"></i>Architecture
+                        </a>
+                    </li>
+                    <li>
+                        <a href="installation.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-download mr-2"></i>Installation
+                        </a>
+                    </li>
+                    <li>
+                        <a href="api.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-code mr-2"></i>API Reference
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ai-integration.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-brain mr-2"></i>AI Integration
+                        </a>
+                    </li>
+                    <li>
+                        <a href="voice-features.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-microphone mr-2"></i>Voice Features
+                        </a>
+                    </li>
+                    <li>
+                        <a href="database.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-database mr-2"></i>Database Schema
+                        </a>
+                    </li>
+                    <li>
+                        <a href="deployment.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-rocket mr-2"></i>Deployment
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-1 content">
+            <div class="max-w-4xl mx-auto px-6 py-8">
+                <div class="prose prose-lg max-w-none">
+                    <h1 class="text-4xl font-bold text-gray-900 mb-6">Photo Tales Gallery Documentation</h1>
+                    
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-info-circle text-blue-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-blue-700">
+                                    Photo Tales Gallery is a modern photo gallery application with AI-powered interview capabilities and voice interaction features.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">What is Photo Tales Gallery?</h2>
+                    <p class="text-gray-700 mb-6">
+                        Photo Tales Gallery helps users document and remember the stories behind their photos through conversational AI interactions. 
+                        It combines modern web technologies with advanced AI capabilities to create an engaging photo management experience.
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-microphone text-blue-600 text-2xl mr-3"></i>
+                                <h3 class="text-lg font-semibold text-gray-900">Voice Interaction</h3>
+                            </div>
+                            <p class="text-gray-600">Speak to your photos with voice recognition and text-to-speech capabilities.</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-brain text-green-600 text-2xl mr-3"></i>
+                                <h3 class="text-lg font-semibold text-gray-900">AI Interviews</h3>
+                            </div>
+                            <p class="text-gray-600">Interactive AI conversations that help you remember and document photo stories.</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-cloud text-purple-600 text-2xl mr-3"></i>
+                                <h3 class="text-lg font-semibold text-gray-900">Cloud Storage</h3>
+                            </div>
+                            <p class="text-gray-600">Secure cloud storage with Google Cloud Platform integration.</p>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Key Features</h2>
+                    <ul class="list-disc list-inside text-gray-700 mb-6 space-y-2">
+                        <li><strong>AI-Powered Photo Analysis:</strong> Automatic tagging, summarization, and metadata extraction</li>
+                        <li><strong>Conversational Interface:</strong> Natural language interactions with your photo collection</li>
+                        <li><strong>Voice Input & Output:</strong> Speak to your photos and hear AI responses</li>
+                        <li><strong>Context-Aware AI:</strong> Remembers previous conversations and builds on them</li>
+                        <li><strong>Dual Interface Modes:</strong> Choose between avatar and text-based interactions</li>
+                        <li><strong>Advanced Search:</strong> Find photos by tags, dates, locations, and content</li>
+                        <li><strong>Cloud Integration:</strong> Seamless Google Cloud Platform integration</li>
+                    </ul>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Technology Stack</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-3">Frontend</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li><i class="fab fa-react text-blue-500 mr-2"></i>React 18 with TypeScript</li>
+                                <li><i class="fab fa-node-js text-green-500 mr-2"></i>Vite build system</li>
+                                <li><i class="fas fa-palette text-purple-500 mr-2"></i>Tailwind CSS + Radix UI</li>
+                                <li><i class="fas fa-route text-orange-500 mr-2"></i>React Router DOM</li>
+                                <li><i class="fas fa-microphone text-red-500 mr-2"></i>Web Speech API</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-3">Backend</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li><i class="fab fa-python text-blue-600 mr-2"></i>Python Flask</li>
+                                <li><i class="fas fa-database text-yellow-500 mr-2"></i>Google Cloud Firestore</li>
+                                <li><i class="fas fa-cloud text-blue-400 mr-2"></i>Google Cloud Storage</li>
+                                <li><i class="fas fa-robot text-green-600 mr-2"></i>OpenAI GPT-4o-mini</li>
+                                <li><i class="fas fa-image text-purple-500 mr-2"></i>Pillow (PIL)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Quick Start</h2>
+                    <div class="bg-gray-900 text-white p-6 rounded-lg mb-6">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-terminal text-green-400 mr-2"></i>
+                            <span class="font-mono">Terminal</span>
+                        </div>
+                        <pre><code># Clone the repository
+git clone https://github.com/your-username/photo-tales-gallery.git
+cd photo-tales-gallery
+
+# Start everything with one command
+./start_all.sh</code></pre>
+                    </div>
+
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-yellow-700">
+                                    <strong>Note:</strong> You'll need OpenAI API keys and Google Cloud Platform credentials to use all features. 
+                                    The <code>start_all.sh</code> script will warn you about missing configuration. 
+                                    See the <a href="installation.html" class="underline">Installation Guide</a> for detailed setup instructions.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Documentation Sections</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                                <a href="architecture.html" class="text-blue-600 hover:text-blue-800">
+                                    <i class="fas fa-sitemap mr-2"></i>Architecture
+                                </a>
+                            </h3>
+                            <p class="text-gray-600">Learn about the system architecture, data flow, and component relationships.</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                                <a href="api.html" class="text-blue-600 hover:text-blue-800">
+                                    <i class="fas fa-code mr-2"></i>API Reference
+                                </a>
+                            </h3>
+                            <p class="text-gray-600">Complete API documentation with endpoints, parameters, and examples.</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                                <a href="ai-integration.html" class="text-blue-600 hover:text-blue-800">
+                                    <i class="fas fa-brain mr-2"></i>AI Integration
+                                </a>
+                            </h3>
+                            <p class="text-gray-600">Understand how AI is integrated, prompts used, and model configurations.</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                                <a href="voice-features.html" class="text-blue-600 hover:text-blue-800">
+                                    <i class="fas fa-microphone mr-2"></i>Voice Features
+                                </a>
+                            </h3>
+                            <p class="text-gray-600">Learn about voice recognition, text-to-speech, and browser compatibility.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Simple navigation highlighting
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

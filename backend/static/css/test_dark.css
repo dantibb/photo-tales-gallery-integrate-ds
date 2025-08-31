@@ -1,0 +1,133 @@
+body {
+    background: #5B5353;
+    color: #E9B791;
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, label, .form-label {
+    color: #E9B791;
+}
+
+.card, .border, .rounded, .form-control, .bg-light {
+    background: #23272a !important;
+    color: #E9B791 !important;
+    border-color: #9068B6 !important;
+}
+
+.card {
+    border-radius: 1rem;
+    box-shadow: 0 2px 12px rgba(229,77,117,0.10);
+    margin-bottom: 1.5rem;
+    border: 1.5px solid #9068B6;
+}
+
+.form-control {
+    background: #5B5353;
+    color: #E9B791;
+    border: 1.5px solid #9068B6;
+    border-radius: 0.5rem;
+}
+
+.form-control:focus {
+    background: #5B5353;
+    color: #fff;
+    border-color: #E54D75;
+    box-shadow: 0 0 0 2px #E54D7544;
+}
+
+.btn-success, .btn-primary {
+    background: #E54D75;
+    border-color: #E54D75;
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(229,77,117,0.10);
+}
+
+.btn-success:hover, .btn-primary:hover {
+    background: #9068B6;
+    border-color: #9068B6;
+    color: #fff;
+}
+
+.btn-secondary, .btn-outline-secondary {
+    background: #23272a;
+    color: #E9B791;
+    border-color: #9068B6;
+}
+
+.btn-secondary:hover, .btn-outline-secondary:hover {
+    background: #9068B6;
+    color: #fff;
+}
+
+textarea.form-control {
+    min-height: 100px;
+    font-size: 1.1rem;
+    resize: vertical;
+}
+
+hr {
+    border-top: 1.5px solid #9068B6;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    background: #23272a;
+}
+::-webkit-scrollbar-thumb {
+    background: #9068B6;
+    border-radius: 4px;
+}
+
+/* Chat/message styling */
+.border.rounded.p-3 {
+    background: #23272a !important;
+    border: 1.5px solid #9068B6 !important;
+    color: #E9B791 !important;
+}
+
+.text-primary {
+    color: #E54D75 !important;
+}
+
+/* System prompt highlight */
+#system_prompt {
+    background: #5B5353;
+    color: #E9B791;
+    border: 1.5px solid #E54D75;
+    font-weight: 500;
+}
+
+/* Make links and buttons pop */
+a, .btn-link {
+    color: #E54D75;
+}
+a:hover, .btn-link:hover {
+    color: #E9B791;
+}
+
+/* Accent for secondary elements */
+.accent {
+    color: #9068B6;
+}
+
+/* Add a modern shadow to cards and modals */
+.card, .modal-content {
+    box-shadow: 0 4px 24px 0 rgba(229,77,117,0.10), 0 1.5px 4px 0 rgba(233,183,145,0.10);
+}
+
+/* Custom style for structured summary box */
+#structuredSummary {
+    background: #23272a !important;
+    color: #E9B791 !important;
+    border: 1.5px solid #9068B6 !important;
+    border-radius: 0.5rem;
+    padding: 1em;
+    margin-top: 0.5em;
+}
+
+/* Ensure muted text is visible on dark backgrounds */
+.text-muted {
+    color: #E9B791 !important;
+} 

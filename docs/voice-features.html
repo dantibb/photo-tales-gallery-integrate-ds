@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Features - Photo Tales Gallery Documentation</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+        .content {
+            height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+        .nav-link {
+            transition: all 0.2s ease;
+        }
+        .nav-link:hover {
+            background-color: #f3f4f6;
+        }
+        .nav-link.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+        code {
+            background-color: #f3f4f6;
+            color: #1f2937;
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+        }
+        .feature-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            color: white;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <i class="fas fa-camera text-blue-600 text-2xl mr-3"></i>
+                    <h1 class="text-2xl font-bold text-gray-900">Photo Tales Gallery</h1>
+                    <span class="ml-3 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Documentation</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="https://github.com" class="text-gray-500 hover:text-gray-700">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="https://openai.com" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-robot text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <nav class="w-64 bg-white shadow-sm sidebar">
+            <div class="p-4">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Documentation</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="index.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-home mr-2"></i>Overview
+                        </a>
+                    </li>
+                    <li>
+                        <a href="architecture.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-sitemap mr-2"></i>Architecture
+                        </a>
+                    </li>
+                    <li>
+                        <a href="installation.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-download mr-2"></i>Installation
+                        </a>
+                    </li>
+                    <li>
+                        <a href="api.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-code mr-2"></i>API Reference
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ai-integration.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-brain mr-2"></i>AI Integration
+                        </a>
+                    </li>
+                    <li>
+                        <a href="voice-features.html" class="nav-link active block px-3 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-microphone mr-2"></i>Voice Features
+                        </a>
+                    </li>
+                    <li>
+                        <a href="database.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-database mr-2"></i>Database Schema
+                        </a>
+                    </li>
+                    <li>
+                        <a href="deployment.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-rocket mr-2"></i>Deployment
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-1 content">
+            <div class="max-w-4xl mx-auto px-6 py-8">
+                <div class="prose prose-lg max-w-none">
+                    <h1 class="text-4xl font-bold text-gray-900 mb-6">Voice Features</h1>
+                    
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-info-circle text-blue-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-blue-700">
+                                    Photo Tales Gallery includes comprehensive voice interaction capabilities using the Web Speech API for both speech recognition and text-to-speech.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Voice Features Overview</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-microphone text-blue-600 text-2xl mr-3"></i>
+                                <h3 class="text-lg font-semibold text-gray-900">Speech Recognition</h3>
+                            </div>
+                            <p class="text-gray-600">Convert your spoken words into text for natural interaction with the AI interviewer.</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-volume-up text-green-600 text-2xl mr-3"></i>
+                                <h3 class="text-lg font-semibold text-gray-900">Text-to-Speech</h3>
+                            </div>
+                            <p class="text-gray-600">Hear AI responses read aloud automatically or on-demand for a more engaging experience.</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-cog text-purple-600 text-2xl mr-3"></i>
+                                <h3 class="text-lg font-semibold text-gray-900">Voice Controls</h3>
+                            </div>
+                            <p class="text-gray-600">Toggle voice features, adjust speech settings, and control playback with intuitive controls.</p>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Speech Recognition</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">How It Works</h3>
+                        <p class="text-gray-600 mb-4">Speech recognition uses the Web Speech API to convert your spoken words into text in real-time.</p>
+                        
+                        <div class="feature-box">
+                            <h4 class="font-bold mb-2">Key Features</h4>
+                            <ul class="text-sm space-y-1">
+                                <li>• Real-time speech-to-text conversion</li>
+                                <li>• Continuous listening mode</li>
+                                <li>• Automatic language detection (en-US)</li>
+                                <li>• Visual feedback during recognition</li>
+                                <li>• Error handling and fallback options</li>
+                            </ul>
+                        </div>
+
+                        <h4 class="font-medium text-gray-900 mb-3 mt-6">Usage Instructions</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold mt-1">1</div>
+                                <div>
+                                    <p class="text-gray-700"><strong>Click the microphone button</strong> next to the text input field</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold mt-1">2</div>
+                                <div>
+                                    <p class="text-gray-700"><strong>Speak clearly</strong> into your microphone</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold mt-1">3</div>
+                                <div>
+                                    <p class="text-gray-700"><strong>Review the recognized text</strong> that appears in the input field</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold mt-1">4</div>
+                                <div>
+                                    <p class="text-gray-700"><strong>Click "Send" or press Enter</strong> to submit your response</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Text-to-Speech</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">AI Response Reading</h3>
+                        <p class="text-gray-600 mb-4">Text-to-speech automatically reads AI responses aloud, making conversations more natural and engaging.</p>
+                        
+                        <div class="feature-box">
+                            <h4 class="font-bold mb-2">Features</h4>
+                            <ul class="text-sm space-y-1">
+                                <li>• Automatic speech synthesis for AI responses</li>
+                                <li>• Manual playback control for any message</li>
+                                <li>• Configurable speech rate and voice</li>
+                                <li>• Visual indicators during speech</li>
+                                <li>• Stop/play controls for active speech</li>
+                            </ul>
+                        </div>
+
+                        <h4 class="font-medium text-gray-900 mb-3 mt-6">Controls</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h5 class="font-medium text-gray-900 mb-2">Auto-Speak Toggle</h5>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Enable/disable automatic speech</li>
+                                    <li>• Checkbox in chat interface</li>
+                                    <li>• Remembers your preference</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-medium text-gray-900 mb-2">Manual Playback</h5>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Click speaker icon on any message</li>
+                                    <li>• Play/pause active speech</li>
+                                    <li>• Individual message control</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Browser Compatibility</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Supported Browsers</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-3">Speech Recognition</h4>
+                                <div class="space-y-2">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-check text-green-500 mr-2"></i>
+                                        <span class="text-sm text-gray-700">Chrome (recommended)</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-check text-green-500 mr-2"></i>
+                                        <span class="text-sm text-gray-700">Edge</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-check text-green-500 mr-2"></i>
+                                        <span class="text-sm text-gray-700">Safari</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-times text-red-500 mr-2"></i>
+                                        <span class="text-sm text-gray-700">Firefox (limited support)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-3">Text-to-Speech</h4>
+                                <div class="space-y-2">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-check text-green-500 mr-2"></i>
+                                        <span class="text-sm text-gray-700">All modern browsers</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-check text-green-500 mr-2"></i>
+                                        <span class="text-sm text-gray-700">Multiple voice options</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-check text-green-500 mr-2"></i>
+                                        <span class="text-sm text-gray-700">Adjustable speech rate</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-6">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-yellow-700">
+                                        <strong>Note:</strong> Voice features require HTTPS in production environments. 
+                                        Local development (localhost) works without HTTPS.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Technical Implementation</h2>
+                    
+                    <div class="space-y-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-microphone text-blue-600 mr-2"></i>Speech Recognition API
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Web Speech API</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• <code>SpeechRecognition</code> interface</li>
+                                        <li>• Continuous recognition mode</li>
+                                        <li>• Language: en-US (default)</li>
+                                        <li>• Interim results support</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Configuration</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• Automatic language detection</li>
+                                        <li>• Error handling and recovery</li>
+                                        <li>• Visual feedback states</li>
+                                        <li>• Fallback to text input</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-volume-up text-green-600 mr-2"></i>Text-to-Speech API
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Web Speech API</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• <code>SpeechSynthesis</code> interface</li>
+                                        <li>• Multiple voice options</li>
+                                        <li>• Configurable speech rate</li>
+                                        <li>• Playback controls</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Features</h4>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>• Auto-speak toggle</li>
+                                        <li>• Manual playback control</li>
+                                        <li>• Speech cancellation</li>
+                                        <li>• Visual indicators</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Voice Interface Components</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Frontend Components</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">AITextInterface.tsx</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Main voice interaction component</li>
+                                    <li>• Speech recognition integration</li>
+                                    <li>• Text-to-speech controls</li>
+                                    <li>• Visual feedback indicators</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Voice Controls</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Microphone button for speech input</li>
+                                    <li>• Speaker icons for text-to-speech</li>
+                                    <li>• Auto-speak toggle checkbox</li>
+                                    <li>• Speech rate controls</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Best Practices</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Speech Recognition Tips</h3>
+                            <ul class="text-sm text-gray-600 space-y-2">
+                                <li>• <strong>Clear Speech:</strong> Speak clearly and at a normal pace</li>
+                                <li>• <strong>Quiet Environment:</strong> Minimize background noise</li>
+                                <li>• <strong>Microphone Quality:</strong> Use a good quality microphone</li>
+                                <li>• <strong>Browser Permissions:</strong> Allow microphone access when prompted</li>
+                                <li>• <strong>Language:</strong> Currently supports English (en-US)</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Text-to-Speech Tips</h3>
+                            <ul class="text-sm text-gray-600 space-y-2">
+                                <li>• <strong>Auto-Speak:</strong> Enable for hands-free interaction</li>
+                                <li>• <strong>Manual Control:</strong> Click speaker icons for specific messages</li>
+                                <li>• <strong>Speech Rate:</strong> Adjust for comfortable listening</li>
+                                <li>• <strong>Voice Selection:</strong> Choose preferred voice from available options</li>
+                                <li>• <strong>Stop Speaking:</strong> Click speaker icon again to stop</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Privacy & Security</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-3">Privacy Features</h3>
+                                <ul class="text-sm text-gray-600 space-y-2">
+                                    <li>• Voice processing happens locally in the browser</li>
+                                    <li>• No voice data is sent to external servers</li>
+                                    <li>• Microphone access is optional and can be revoked</li>
+                                    <li>• All voice features can be disabled</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-3">Security Considerations</h3>
+                                <ul class="text-sm text-gray-600 space-y-2">
+                                    <li>• HTTPS required for production use</li>
+                                    <li>• Browser permission management</li>
+                                    <li>• Secure microphone access</li>
+                                    <li>• No voice data storage</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Troubleshooting</h2>
+                    
+                    <div class="space-y-4 mb-8">
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <h4 class="font-medium text-yellow-800">Microphone Not Working</h4>
+                                    <p class="text-sm text-yellow-700 mt-1">
+                                        Check browser permissions, ensure microphone is connected and working, and try refreshing the page.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <h4 class="font-medium text-yellow-800">Speech Recognition Issues</h4>
+                                    <p class="text-sm text-yellow-700 mt-1">
+                                        Ensure you're using a supported browser (Chrome recommended), speak clearly, and check for background noise.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <h4 class="font-medium text-yellow-800">Text-to-Speech Not Working</h4>
+                                    <p class="text-sm text-yellow-700 mt-1">
+                                        Check if auto-speak is enabled, try clicking speaker icons manually, and ensure system audio is working.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <h4 class="font-medium text-yellow-800">Browser Compatibility</h4>
+                                    <p class="text-sm text-yellow-700 mt-1">
+                                        Voice features work best in Chrome, Edge, or Safari. Firefox has limited support for speech recognition.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-8">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-check-circle text-green-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-green-700">
+                                    <strong>Voice Features Benefits:</strong> Voice interaction makes Photo Tales Gallery more accessible and engaging, 
+                                    allowing users to have natural conversations with their photos through speech recognition and text-to-speech.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Simple navigation highlighting
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

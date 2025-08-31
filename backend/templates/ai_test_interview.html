@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>AI Interviewer Chat 2</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/test_dark.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+    .card:hover {
+      box-shadow: 0 6px 24px rgba(0,0,0,0.18) !important;
+      transform: translateY(-2px) scale(1.02);
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+    .btn, .list-group-item {
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    }
+    #voiceBtn {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-left: 0;
+    }
+    #micIcon.text-danger {
+      color: #dc3545 !important;
+    }
+    </style>
+</head>
+<body class="container py-4">
+<!-- Bootstrap Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary rounded mb-4 shadow">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">AI Interviewer</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('reset') }}">Back to Image List</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+    <div class="row mb-4">
+        <div class="col-md-7 d-flex flex-column justify-content-between">
+            <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <label for="ai_summary" class="form-label"><strong>AI Summary</strong></label>
+                    <button id="refreshSummaryBtn" class="btn btn-sm btn-outline-primary ms-2" type="button">Refresh Summary</button>
+                </div>
+                <textarea id="ai_summary" class="form-control" rows="8" readonly placeholder="(Summary will appear here in future)"></textarea>
+            </div>
+        </div>
+        <div class="col-md-5 text-end position-relative">
+            <div class="position-relative d-inline-block">
+                <img src="{{ url_for('images', filename=image_name) }}" class="img-fluid rounded shadow" style="max-width: 320px; max-height: 220px; object-fit: cover;" alt="Image preview">
+                <button class="btn btn-sm btn-outline-info position-absolute top-0 end-0 m-1" onclick="showMetadata()" title="View Image Metadata">
+                    <i class="fas fa-info-circle"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-3 text-end">
+        <button id="startInterviewBtn" class="btn btn-primary">Start Interview</button>
+        <button id="clearSummariesBtn" class="btn btn-danger ms-2" type="button">Clear All Summaries</button>
+    </div>
+
+    <div class="card border rounded p-3 mb-4">
+        <h5 class="mb-3 text-primary">Current Question</h5>
+        <div id="chatHistory" style="background: transparent; min-height: 120px;">
+            {% if messages %}
+                {% for msg in messages %}
+                    {% if msg.role == 'assistant' %}
+                        {% if loop.last %}
+                            <div class="d-flex align-items-center">
+                                <div id="ai-question-text" class="text-primary flex-grow-1"><strong>The Chronicler:</strong> {{ msg.content }}</div>
+                                <button id="speakQuestionBtn" class="btn btn-outline-secondary btn-sm ms-2" title="Hear question" type="button">
+                                    <i class="fas fa-volume-up"></i>
+                                </button>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="text-muted">Click "Start Interview" to begin...</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <form method="post" class="mb-4">
+        <div class="mb-3 position-relative">
+            <label for="user_text" class="form-label">Your Response:</label>
+            <div class="input-group">
+                <textarea class="form-control" id="user_text" name="user_text" rows="2" required></textarea>
+                <button type="button" id="voiceBtn" class="btn btn-outline-primary" style="min-width:48px;" title="Speak your answer">
+                    <i id="micIcon" class="fas fa-microphone"></i>
+                </button>
+            </div>
+            <div id="voiceStatus" class="form-text text-primary" style="display:none;">Listening...</div>
+        </div>
+        <button type="submit" class="btn btn-success">Send</button>
+    </form>
+
+    <!-- Context/Description Management Section -->
+    <hr>
+    <h4>Descriptions / Contexts</h4>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div></div>
+        <button class="btn btn-sm btn-outline-danger" onclick="clearAllContexts()">
+            <i class="fas fa-trash"></i> Clear All Contexts
+        </button>
+    </div>
+    <div id="contextList" class="mb-3" style="max-height: 30vh; overflow-y: auto;"></div>
+    <div id="addContextArea" class="mb-3">
+        <h6>Add New Description</h6>
+        <textarea class="form-control mb-2" id="newContextInput" rows="2" placeholder="Type new description..."></textarea>
+        <button class="btn btn-sm btn-primary" onclick="addNewContext()">Add</button>
+    </div>
+    <div id="editContextArea" class="mb-3" style="display: none;">
+        <h6>Edit Description</h6>
+        <textarea class="form-control mb-2" id="editContextInput" rows="2"></textarea>
+        <input type="hidden" id="editContextId">
+        <button class="btn btn-sm btn-success" onclick="saveUpdatedContext()">Save</button>
+        <button class="btn btn-sm btn-secondary" onclick="cancelEdit()">Cancel</button>
+    </div>
+
+    <!-- Metadata Modal -->
+    <div class="modal fade" id="metadataModal" tabindex="-1" aria-labelledby="metadataModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="metadataModalLabel">Image Metadata</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="metadataContent">
+                        <div class="text-center">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const imageName = {{ image_name|tojson }};
+    document.addEventListener('DOMContentLoaded', function() {
+        renderContexts();
+        // Populate AI Summary if provided
+        var initialSummary = {{ ai_summary|tojson }};
+        var initialTitle = {{ title|tojson }};
+        var initialSummaryText = {{ summary_text|tojson }};
+        var initialDescription = {{ description|tojson }};
+        if (initialTitle || initialSummaryText || initialDescription) {
+            displayStructuredSummaryFields(initialTitle, initialSummaryText, initialDescription);
+        } else if (initialSummary) {
+            displayStructuredSummary(initialSummary);
+        }
+    });
+
+    function renderContexts() {
+        const contextList = document.getElementById('contextList');
+        contextList.innerHTML = '<div class="text-center"><div class="spinner-border spinner-border-sm"></div></div>';
+        fetch(`/images/${encodeURIComponent(imageName)}/contexts`)
+            .then(response => response.json())
+            .then(contexts => {
+                if (contexts.length === 0) {
+                    contextList.innerHTML = '<p class="text-muted small">No descriptions yet.</p>';
+                    return;
+                }
+                contextList.innerHTML = contexts.map(context => `
+                    <div class="card card-body bg-light p-2 mb-2">
+                        <p class="mb-1 small">${escapeHtml(context.text)}</p>
+                        <div class="text-end">
+                            <button class="btn btn-sm btn-outline-secondary py-0 px-1" onclick="showEditContext('${context.id}', '${escapeQuotes(context.text)}')">Edit</button>
+                            <button class="btn btn-sm btn-outline-danger py-0 px-1" onclick="deleteContext('${context.id}')">Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+            });
+    }
+
+    function addNewContext() {
+        const text = document.getElementById('newContextInput').value.trim();
+        if (!text) return;
+        fetch(`/images/${encodeURIComponent(imageName)}/contexts`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: text })
+        })
+        .then(response => {
+            if (response.ok) {
+                document.getElementById('newContextInput').value = '';
+                renderContexts();
+            } else {
+                alert('Failed to add description.');
+            }
+        });
+    }
+
+    function showEditContext(contextId, text) {
+        document.getElementById('addContextArea').style.display = 'none';
+        document.getElementById('editContextArea').style.display = 'block';
+        document.getElementById('editContextId').value = contextId;
+        document.getElementById('editContextInput').value = text;
+    }
+
+    function cancelEdit() {
+        document.getElementById('addContextArea').style.display = 'block';
+        document.getElementById('editContextArea').style.display = 'none';
+    }
+
+    function saveUpdatedContext() {
+        const contextId = document.getElementById('editContextId').value;
+        const text = document.getElementById('editContextInput').value.trim();
+        if (!contextId || !text) return;
+        fetch(`/images/${encodeURIComponent(imageName)}/contexts/${contextId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: text })
+        })
+        .then(response => {
+            if (response.ok) {
+                cancelEdit();
+                renderContexts();
+            } else {
+                alert('Failed to update description.');
+            }
+        });
+    }
+
+    function deleteContext(contextId) {
+        if (!confirm('Are you sure you want to delete this description?')) return;
+        fetch(`/images/${encodeURIComponent(imageName)}/contexts/${contextId}`, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok) {
+                renderContexts();
+            } else {
+                alert('Failed to delete description.');
+            }
+        });
+    }
+
+    function escapeQuotes(str) {
+        return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+    function escapeHtml(text) {
+        var map = {
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        };
+        return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+
+    document.getElementById('startInterviewBtn').addEventListener('click', function() {
+        const btn = this;
+        btn.disabled = true;
+        btn.textContent = 'Starting...';
+        fetch(`/start_interview/${encodeURIComponent(imageName)}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Update chat history with only the latest AI question
+            const chatHistory = document.getElementById('chatHistory');
+            chatHistory.innerHTML = '';
+            
+            // Find the last assistant message
+            const lastAssistantMessage = data.messages.filter(msg => msg.role === 'assistant').pop();
+            if (lastAssistantMessage) {
+                chatHistory.innerHTML = `<div class="text-primary"><strong>The Chronicler:</strong> ${escapeHtml(lastAssistantMessage.content)}</div>`;
+            }
+            
+            btn.textContent = 'Interview Started';
+        })
+        .catch(() => {
+            btn.disabled = false;
+            btn.textContent = 'Start Interview';
+            alert('Failed to start interview.');
+        });
+    });
+
+    // Refresh Summary button logic
+    const refreshBtn = document.getElementById('refreshSummaryBtn');
+    const aiSummaryField = document.getElementById('ai_summary');
+    refreshBtn.addEventListener('click', function() {
+        refreshBtn.disabled = true;
+        refreshBtn.textContent = 'Refreshing...';
+        aiSummaryField.value = '';
+        fetch(`/summarise/${encodeURIComponent(imageName)}`, {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            displayStructuredSummaryFields(data.title, data.summary_text, data.description);
+            refreshBtn.textContent = 'Refresh Summary';
+            refreshBtn.disabled = false;
+        })
+        .catch(() => {
+            aiSummaryField.value = '(Failed to generate summary)';
+            refreshBtn.textContent = 'Refresh Summary';
+            refreshBtn.disabled = false;
+        });
+    });
+
+    function displayStructuredSummaryFields(title, summary, description) {
+        let html = '';
+        if (title) {
+            html += `<div class='mb-2'><strong>Title:</strong> <span>${title}</span></div>`;
+        }
+        if (summary) {
+            html += `<div class='mb-2'><strong>Summary:</strong> <span>${summary}</span></div>`;
+        }
+        if (description) {
+            html += `<div class='mb-2'><strong>Description:</strong><br><span>${description.replace(/\n/g, '<br>')}</span></div>`;
+        }
+        if (!html) {
+            html = `<span>(No summary available)</span>`;
+        }
+        document.getElementById('ai_summary').value = '';
+        document.getElementById('ai_summary').style.display = 'none';
+        let structuredDiv = document.getElementById('structuredSummary');
+        if (!structuredDiv) {
+            structuredDiv = document.createElement('div');
+            structuredDiv.id = 'structuredSummary';
+            structuredDiv.className = 'border rounded p-2 mb-2 bg-light';
+            document.getElementById('ai_summary').parentNode.appendChild(structuredDiv);
+        }
+        structuredDiv.innerHTML = html;
+    }
+
+    function clearAllContexts() {
+        if (!confirm('Are you sure you want to delete all descriptions? This action cannot be undone.')) return;
+        
+        fetch('/clear_all_contexts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                renderContexts();
+                alert('All contexts cleared successfully!');
+            } else {
+                alert('Failed to clear contexts: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to clear contexts.');
+        });
+    }
+
+    function showMetadata() {
+        const modal = new bootstrap.Modal(document.getElementById('metadataModal'));
+        modal.show();
+        
+        const metadataContent = document.getElementById('metadataContent');
+        metadataContent.innerHTML = '<div class="text-center"><div class="spinner-border"></div><p class="mt-2">Loading metadata...</p></div>';
+        
+        fetch(`/images/${encodeURIComponent(imageName)}/metadata`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    metadataContent.innerHTML = formatMetadataForDisplay(data.formatted_metadata);
+                } else {
+                    metadataContent.innerHTML = `<div class="alert alert-danger">Failed to load metadata: ${data.error || 'Unknown error'}</div>`;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                metadataContent.innerHTML = '<div class="alert alert-danger">Failed to load metadata.</div>';
+            });
+    }
+
+    function formatMetadataForDisplay(formattedMetadata) {
+        let html = '';
+        
+        // Summary section
+        if (formattedMetadata.summary) {
+            html += `<div class="alert alert-info mb-3"><strong>Summary:</strong> ${formattedMetadata.summary}</div>`;
+        }
+        
+        // File Information
+        if (Object.keys(formattedMetadata.file_info || {}).length > 0) {
+            html += '<div class="mb-4"><h6 class="text-primary">File Information</h6><div class="row">';
+            for (const [key, value] of Object.entries(formattedMetadata.file_info)) {
+                html += `<div class="col-md-6"><strong>${key}:</strong> ${value}</div>`;
+            }
+            html += '</div></div>';
+        }
+        
+        // Camera Information
+        if (Object.keys(formattedMetadata.camera_info || {}).length > 0) {
+            html += '<div class="mb-4"><h6 class="text-primary">Camera Information</h6><div class="row">';
+            for (const [key, value] of Object.entries(formattedMetadata.camera_info)) {
+                html += `<div class="col-md-6"><strong>${key}:</strong> ${value}</div>`;
+            }
+            html += '</div></div>';
+        }
+        
+        // Capture Information
+        if (Object.keys(formattedMetadata.capture_info || {}).length > 0) {
+            html += '<div class="mb-4"><h6 class="text-primary">Capture Information</h6><div class="row">';
+            for (const [key, value] of Object.entries(formattedMetadata.capture_info)) {
+                html += `<div class="col-md-6"><strong>${key}:</strong> ${value}</div>`;
+            }
+            html += '</div></div>';
+        }
+        
+        // Technical Information
+        if (Object.keys(formattedMetadata.technical_info || {}).length > 0) {
+            html += '<div class="mb-4"><h6 class="text-primary">Technical Information</h6><div class="row">';
+            for (const [key, value] of Object.entries(formattedMetadata.technical_info)) {
+                html += `<div class="col-md-6"><strong>${key}:</strong> ${value}</div>`;
+            }
+            html += '</div></div>';
+        }
+        
+        // GPS Information
+        if (Object.keys(formattedMetadata.gps_info || {}).length > 0) {
+            html += '<div class="mb-4"><h6 class="text-primary">GPS Information</h6><div class="row">';
+            // Show decimal degrees first if present
+            if (formattedMetadata.gps_info['Latitude (decimal)'] !== undefined && formattedMetadata.gps_info['Longitude (decimal)'] !== undefined) {
+                html += `<div class="col-md-12"><strong>Latitude (decimal):</strong> ${formattedMetadata.gps_info['Latitude (decimal)']}</div>`;
+                html += `<div class="col-md-12"><strong>Longitude (decimal):</strong> ${formattedMetadata.gps_info['Longitude (decimal)']}</div>`;
+            }
+            // Show Google Maps link if present
+            if (formattedMetadata.gps_info['Google Maps']) {
+                html += `<div class="col-md-12"><a href="${formattedMetadata.gps_info['Google Maps']}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-success my-2">View on Google Maps</a></div>`;
+            }
+            // Show all other GPS fields except the above
+            for (const [key, value] of Object.entries(formattedMetadata.gps_info)) {
+                if (key !== 'Latitude (decimal)' && key !== 'Longitude (decimal)' && key !== 'Google Maps') {
+                    html += `<div class="col-md-6"><strong>${key}:</strong> ${value}</div>`;
+                }
+            }
+            html += '</div></div>';
+        }
+        
+        // Other Information
+        if (Object.keys(formattedMetadata.other_info || {}).length > 0) {
+            html += '<div class="mb-4"><h6 class="text-primary">Other Information</h6><div class="row">';
+            for (const [key, value] of Object.entries(formattedMetadata.other_info)) {
+                html += `<div class="col-md-6"><strong>${key}:</strong> ${value}</div>`;
+            }
+            html += '</div></div>';
+        }
+        
+        if (html === '') {
+            html = '<div class="alert alert-warning">No metadata available for this image.</div>';
+        }
+        
+        return html;
+    }
+
+    document.getElementById('clearSummariesBtn').addEventListener('click', function() {
+        if (!confirm('Are you sure you want to clear all summaries? This cannot be undone.')) return;
+        fetch('/clear_all_summaries', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('All summaries cleared!');
+                    location.reload();
+                } else {
+                    alert('Failed to clear summaries: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(() => alert('Failed to clear summaries.'));
+    });
+
+    // Voice input logic
+    const voiceBtn = document.getElementById('voiceBtn');
+    const userText = document.getElementById('user_text');
+    const micIcon = document.getElementById('micIcon');
+    const voiceStatus = document.getElementById('voiceStatus');
+    let recognition, recognizing = false;
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+      recognition.onstart = function() {
+        recognizing = true;
+        micIcon.classList.remove('fa-microphone');
+        micIcon.classList.add('fa-microphone-lines', 'text-danger');
+        voiceStatus.style.display = '';
+      };
+      recognition.onend = function() {
+        recognizing = false;
+        micIcon.classList.add('fa-microphone');
+        micIcon.classList.remove('fa-microphone-lines', 'text-danger');
+        voiceStatus.style.display = 'none';
+      };
+      recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        userText.value = userText.value ? userText.value + ' ' + transcript : transcript;
+        userText.focus();
+      };
+      voiceBtn.onclick = function(e) {
+        e.preventDefault();
+        if (recognizing) {
+          recognition.stop();
+        } else {
+          recognition.start();
+        }
+      };
+    } else {
+      voiceBtn.disabled = true;
+      voiceBtn.title = 'Speech recognition not supported in this browser.';
+    }
+
+    // Speech synthesis for AI question
+    const speakBtn = document.getElementById('speakQuestionBtn');
+    if (speakBtn) {
+      speakBtn.onclick = function() {
+        const questionDiv = document.getElementById('ai-question-text');
+        if (questionDiv && 'speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          const text = questionDiv.textContent.replace('The Chronicler:', '').trim();
+          const utter = new SpeechSynthesisUtterance(text);
+          utter.lang = 'en-US';
+          window.speechSynthesis.speak(utter);
+        }
+      };
+    }
+    </script>
+</body>
+</html> 

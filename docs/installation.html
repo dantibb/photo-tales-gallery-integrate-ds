@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Installation - Photo Tales Gallery Documentation</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+        .content {
+            height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+        .nav-link {
+            transition: all 0.2s ease;
+        }
+        .nav-link:hover {
+            background-color: #f3f4f6;
+        }
+        .nav-link.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+        code {
+            background-color: #f3f4f6;
+            color: #1f2937;
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+        }
+        .step-number {
+            background-color: #3b82f6;
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <i class="fas fa-camera text-blue-600 text-2xl mr-3"></i>
+                    <h1 class="text-2xl font-bold text-gray-900">Photo Tales Gallery</h1>
+                    <span class="ml-3 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Documentation</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="https://github.com" class="text-gray-500 hover:text-gray-700">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="https://openai.com" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-robot text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <nav class="w-64 bg-white shadow-sm sidebar">
+            <div class="p-4">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Documentation</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="index.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-home mr-2"></i>Overview
+                        </a>
+                    </li>
+                    <li>
+                        <a href="architecture.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-sitemap mr-2"></i>Architecture
+                        </a>
+                    </li>
+                    <li>
+                        <a href="installation.html" class="nav-link active block px-3 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-download mr-2"></i>Installation
+                        </a>
+                    </li>
+                    <li>
+                        <a href="api.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-code mr-2"></i>API Reference
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ai-integration.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-brain mr-2"></i>AI Integration
+                        </a>
+                    </li>
+                    <li>
+                        <a href="voice-features.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-microphone mr-2"></i>Voice Features
+                        </a>
+                    </li>
+                    <li>
+                        <a href="database.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-database mr-2"></i>Database Schema
+                        </a>
+                    </li>
+                    <li>
+                        <a href="deployment.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-rocket mr-2"></i>Deployment
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-1 content">
+            <div class="max-w-4xl mx-auto px-6 py-8">
+                <div class="prose prose-lg max-w-none">
+                    <h1 class="text-4xl font-bold text-gray-900 mb-6">Installation Guide</h1>
+                    
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-info-circle text-blue-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-blue-700">
+                                    This guide will walk you through setting up Photo Tales Gallery on your local machine for development.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Prerequisites</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-3">System Requirements</h3>
+                                <ul class="text-sm text-gray-600 space-y-2">
+                                    <li>• <strong>Node.js:</strong> Version 18 or higher</li>
+                                    <li>• <strong>Python:</strong> Version 3.8 or higher</li>
+                                    <li>• <strong>Git:</strong> For cloning the repository</li>
+                                    <li>• <strong>Modern Browser:</strong> Chrome, Edge, or Safari</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-3">External Services</h3>
+                                <ul class="text-sm text-gray-600 space-y-2">
+                                    <li>• <strong>OpenAI API Key:</strong> For AI features</li>
+                                    <li>• <strong>Google Cloud Account:</strong> For storage (optional)</li>
+                                    <li>• <strong>Microphone Access:</strong> For voice features</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Quick Installation</h2>
+                    
+                    <div class="bg-gray-900 text-white p-6 rounded-lg mb-8">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-terminal text-green-400 mr-2"></i>
+                            <span class="font-mono">One-Command Setup</span>
+                        </div>
+                        <pre><code># Clone and setup everything
+git clone https://github.com/your-username/photo-tales-gallery.git
+cd photo-tales-gallery
+./start_all.sh</code></pre>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">The start_all.sh Script</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                            <i class="fas fa-rocket text-purple-600 mr-2"></i>What start_all.sh Does
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-3">Setup & Installation</h4>
+                                <ul class="text-sm text-gray-600 space-y-2">
+                                    <li>• Installs frontend dependencies (npm install)</li>
+                                    <li>• Installs backend dependencies (pip install)</li>
+                                    <li>• Creates config.env from example if missing</li>
+                                    <li>• Validates configuration and warns about missing API keys</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-3">Server Management</h4>
+                                <ul class="text-sm text-gray-600 space-y-2">
+                                    <li>• Starts backend server in background</li>
+                                    <li>• Starts frontend server in background</li>
+                                    <li>• Provides process IDs for easy shutdown</li>
+                                    <li>• Shows access URLs and status</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <h4 class="font-medium text-gray-900 mb-3 mt-6">Configuration Warnings</h4>
+                        <p class="text-sm text-gray-600 mb-4">The script checks for these required environment variables and warns if they're missing:</p>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                            <ul class="text-sm text-yellow-700 space-y-1">
+                                <li>• <code>OPENAI_API_KEY</code> - Required for AI features</li>
+                                <li>• <code>GCS_BUCKET_NAME</code> - Required for cloud storage</li>
+                                <li>• <code>GOOGLE_APPLICATION_CREDENTIALS</code> - Required for Google Cloud</li>
+                                <li>• <code>FLASK_SECRET_KEY</code> - Required for session security</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Detailed Installation Steps</h2>
+                    
+                    <div class="space-y-6 mb-8">
+                        <!-- Step 1 -->
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <div class="flex items-center mb-4">
+                                <div class="step-number">1</div>
+                                <h3 class="text-lg font-semibold text-gray-900">Clone the Repository</h3>
+                            </div>
+                            <pre><code>git clone https://github.com/your-username/photo-tales-gallery.git
+cd photo-tales-gallery</code></pre>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <div class="flex items-center mb-4">
+                                <div class="step-number">2</div>
+                                <h3 class="text-lg font-semibold text-gray-900">Install Frontend Dependencies</h3>
+                            </div>
+                            <pre><code>npm install</code></pre>
+                            <p class="text-gray-600 mt-2">This installs React, TypeScript, Tailwind CSS, and all other frontend dependencies.</p>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <div class="flex items-center mb-4">
+                                <div class="step-number">3</div>
+                                <h3 class="text-lg font-semibold text-gray-900">Install Backend Dependencies</h3>
+                            </div>
+                            <pre><code>cd backend
+pip install -r requirements.txt</code></pre>
+                            <p class="text-gray-600 mt-2">This installs Flask, OpenAI, and other Python dependencies.</p>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <div class="flex items-center mb-4">
+                                <div class="step-number">4</div>
+                                <h3 class="text-lg font-semibold text-gray-900">Configure Environment Variables</h3>
+                            </div>
+                            <pre><code>cd backend
+cp config.env.example config.env</code></pre>
+                            <p class="text-gray-600 mt-2">Edit <code>config.env</code> with your API keys and configuration.</p>
+                        </div>
+
+                        <!-- Step 5 -->
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <div class="flex items-center mb-4">
+                                <div class="step-number">5</div>
+                                <h3 class="text-lg font-semibold text-gray-900">Start the Application</h3>
+                            </div>
+                            <pre><code>./start_all.sh</code></pre>
+                            <p class="text-gray-600 mt-2">This comprehensive script installs dependencies, sets up configuration, and starts both servers with proper process management.</p>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Environment Configuration</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Required Environment Variables</h3>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">OpenAI Configuration</h4>
+                                <pre><code># Your OpenAI API key (required for AI features)
+OPENAI_API_KEY=sk-your-openai-api-key-here</code></pre>
+                                <p class="text-sm text-gray-600 mt-1">Get your API key from <a href="https://platform.openai.com/api-keys" class="text-blue-600 hover:underline">OpenAI Platform</a></p>
+                            </div>
+
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Google Cloud Configuration (Optional)</h4>
+                                <pre><code># Path to your Google Cloud service account JSON key file
+GOOGLE_APPLICATION_CREDENTIALS=/path/to/your/service-account-key.json
+
+# Your Google Cloud Storage bucket name
+GCS_BUCKET_NAME=your-gcs-bucket-name
+
+# Your Firestore database name (usually '(default)')
+FIRESTORE_DATABASE_NAME=(default)</code></pre>
+                                <p class="text-sm text-gray-600 mt-1">Only required if using Google Cloud Storage and Firestore</p>
+                            </div>
+
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Flask Configuration</h4>
+                                <pre><code># Secret key for Flask sessions (generate a random string)
+FLASK_SECRET_KEY=your-secret-key-here</code></pre>
+                                <p class="text-sm text-gray-600 mt-1">Generate a random string for session security</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Development Setup</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-rocket text-purple-600 mr-2"></i>Full Application
+                            </h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Start Everything</h4>
+                                    <pre class="text-sm"><code>./start_all.sh</code></pre>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Stop Servers</h4>
+                                    <pre class="text-sm"><code>kill $BACKEND_PID $FRONTEND_PID</code></pre>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Alternative Start</h4>
+                                    <pre class="text-sm"><code>npm run dev:full</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-desktop text-blue-600 mr-2"></i>Frontend Development
+                            </h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Start Frontend Only</h4>
+                                    <pre class="text-sm"><code>npm run dev</code></pre>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Build for Production</h4>
+                                    <pre class="text-sm"><code>npm run build</code></pre>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Lint Code</h4>
+                                    <pre class="text-sm"><code>npm run lint</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-server text-green-600 mr-2"></i>Backend Development
+                            </h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Start Backend Only</h4>
+                                    <pre class="text-sm"><code>cd backend
+python local_api.py</code></pre>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Run with Gunicorn</h4>
+                                    <pre class="text-sm"><code>cd backend
+gunicorn -w 4 -b 0.0.0.0:5001 local_api:app</code></pre>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Health Check</h4>
+                                    <pre class="text-sm"><code>curl http://localhost:5001/api/health</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Database Setup</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Local Development Database</h3>
+                        <p class="text-gray-600 mb-4">For local development, the application uses TinyDB (JSON-based) by default. No additional setup required.</p>
+                        
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 mt-6">Google Cloud Firestore (Production)</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">1. Create Google Cloud Project</h4>
+                                <ol class="text-sm text-gray-600 space-y-1">
+                                    <li>Go to <a href="https://console.cloud.google.com" class="text-blue-600 hover:underline">Google Cloud Console</a></li>
+                                    <li>Create a new project or select existing</li>
+                                    <li>Enable Firestore and Cloud Storage APIs</li>
+                                </ol>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">2. Create Service Account</h4>
+                                <ol class="text-sm text-gray-600 space-y-1">
+                                    <li>Go to IAM & Admin > Service Accounts</li>
+                                    <li>Create a new service account</li>
+                                    <li>Download the JSON key file</li>
+                                    <li>Set the path in <code>GOOGLE_APPLICATION_CREDENTIALS</code></li>
+                                </ol>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">3. Create Storage Bucket</h4>
+                                <ol class="text-sm text-gray-600 space-y-1">
+                                    <li>Go to Cloud Storage > Buckets</li>
+                                    <li>Create a new bucket</li>
+                                    <li>Set the bucket name in <code>GCS_BUCKET_NAME</code></li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Troubleshooting</h2>
+                    
+                    <div class="space-y-4 mb-8">
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <h4 class="font-medium text-yellow-800">Port Already in Use</h4>
+                                    <p class="text-sm text-yellow-700 mt-1">
+                                        If port 5001 is already in use, change the port in <code>backend/local_api.py</code> or kill the existing process.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <h4 class="font-medium text-yellow-800">OpenAI API Key Issues</h4>
+                                    <p class="text-sm text-yellow-700 mt-1">
+                                        Ensure your OpenAI API key is valid and has sufficient credits. Check the API key format and permissions.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <h4 class="font-medium text-yellow-800">Python Dependencies</h4>
+                                    <p class="text-sm text-yellow-700 mt-1">
+                                        If you encounter Python dependency issues, try using a virtual environment:
+                                        <code>python -m venv venv && source venv/bin/activate</code>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <h4 class="font-medium text-yellow-800">Node.js Version</h4>
+                                    <p class="text-sm text-yellow-700 mt-1">
+                                        Ensure you're using Node.js 18 or higher. Check with <code>node --version</code> and update if necessary.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Verification</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Check Installation</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">1. Frontend (http://localhost:5173)</h4>
+                                <p class="text-gray-600">You should see the Photo Tales Gallery interface with a photo grid.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">2. Backend API (http://localhost:5001/api/health)</h4>
+                                <pre class="text-sm"><code>curl http://localhost:5001/api/health
+# Should return: {"status": "healthy"}</code></pre>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">3. AI Features</h4>
+                                <p class="text-gray-600">Try generating tags or starting an interview on a photo to test OpenAI integration.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">4. Voice Features</h4>
+                                <p class="text-gray-600">Grant microphone permissions and test voice input in the chat interface.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-8">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-check-circle text-green-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-green-700">
+                                    <strong>Installation Complete!</strong> You now have Photo Tales Gallery running locally. 
+                                    Check out the <a href="api.html" class="underline">API Reference</a> and <a href="voice-features.html" class="underline">Voice Features</a> documentation to get started.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Simple navigation highlighting
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

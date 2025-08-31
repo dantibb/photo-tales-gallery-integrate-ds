@@ -1,0 +1,205 @@
+/* Custom styles for Media Viewer */
+
+body {
+    background-color: #f8f9fa;
+}
+
+/* Card hover effects */
+.media-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.media-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+}
+
+/* Media thumbnails */
+.media-thumbnail {
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Gallery grid */
+#gallery-container {
+    min-height: 400px;
+}
+
+/* Search and filter styling */
+.btn-check:checked + .btn-outline-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+}
+
+/* Modal styling */
+.modal-xl {
+    max-width: 90%;
+}
+
+#mediaContent {
+    text-align: center;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#mediaContent img,
+#mediaContent video {
+    max-height: 60vh;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+/* Loading spinner */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .modal-xl {
+        max-width: 95%;
+    }
+    
+    #mediaContent {
+        min-height: 200px;
+    }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Animation for cards */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.media-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Stats cards */
+.card {
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.card-header {
+    border-bottom: 1px solid #e9ecef;
+    background-color: #fff;
+}
+
+/* Button styling */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #2980b9 0%, #2471a3 100%);
+    transform: translateY(-1px);
+}
+
+/* Navbar styling */
+.navbar {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-weight: 600;
+}
+
+/* Footer styling */
+footer {
+    border-top: 1px solid #e9ecef;
+}
+
+/* Text utilities */
+.text-truncate {
+    max-width: 100%;
+}
+
+/* Form controls */
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Alert styling */
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+
+/* Badge styling */
+.badge {
+    font-size: 0.75em;
+    padding: 0.35em 0.65em;
+}
+
+/* Tooltip styling */
+.tooltip {
+    font-size: 0.875rem;
+}
+
+/* Custom focus styles for accessibility */
+.btn:focus,
+.form-control:focus,
+.form-check-input:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* --- BRANDING --- */
+
+/* 3. Add your custom navbar color */
+.bg-custom-nav {
+    background-color: #2C3E50; /* Example: A dark slate color */
+}
+
+/* 4. Change the primary button color */
+.btn-primary {
+    /* Replace these with your primary brand color */
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); /* Example: A nice blue gradient */
+    border: none;
+}
+
+/* --- END BRANDING --- */ 

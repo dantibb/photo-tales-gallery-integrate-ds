@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Home - GCP Media Viewer{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="text-center">
+                <h1 class="display-4 mb-3">
+                    <i class="fas fa-photo-video text-primary me-3"></i>
+                    Welcome to Your Media Library
+                </h1>
+                <p class="lead text-muted">
+                    Browse and manage your videos and images stored in Google Cloud Storage
+                </p>
+                <a href="{{ url_for('gallery') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-images me-2"></i>View Gallery
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-5">
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="text-primary mb-3">
+                        <i class="fas fa-images fa-3x"></i>
+                    </div>
+                    <h3 class="card-title" id="total-media">-</h3>
+                    <p class="card-text text-muted">Total Media Items</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="text-success mb-3">
+                        <i class="fas fa-photo-film fa-3x"></i>
+                    </div>
+                    <h3 class="card-title" id="total-images">-</h3>
+                    <p class="card-text text-muted">Images</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="text-info mb-3">
+                        <i class="fas fa-video fa-3x"></i>
+                    </div>
+                    <h3 class="card-title" id="total-videos">-</h3>
+                    <p class="card-text text-muted">Videos</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Media -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-clock me-2"></i>Recent Media
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="recent-media" class="row">
+                        <div class="col-12 text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadDashboardData();
+});
+
+function loadDashboardData() {
+    fetch('/api/media')
+        .then(response => response.json())
+        .then(data => {
+            // Manually fetch contexts for recent items for the dashboard
+            const recentItems = data.slice(0, 6);
+            const contextPromises = recentItems.map(item => 
+                fetch(`/media/${item.id}/contexts`).then(res => res.json())
+            );
+
+            Promise.all(contextPromises).then(contexts => {
+                recentItems.forEach((item, index) => {
+                    item.contexts = contexts[index];
+                });
+                updateStats(data);
+                updateRecentMedia(recentItems);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading dashboard data:', error);
+        });
+}
+
+function updateStats(mediaItems) {
+    const totalMedia = mediaItems.length;
+    const images = mediaItems.filter(item => 
+        item.gcs_path.match(/\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i)
+    ).length;
+    const videos = mediaItems.filter(item => 
+        item.gcs_path.match(/\.(mp4|avi|mov|wmv|flv|webm|mkv)$/i)
+    ).length;
+
+    document.getElementById('total-media').textContent = totalMedia;
+    document.getElementById('total-images').textContent = images;
+    document.getElementById('total-videos').textContent = videos;
+}
+
+function updateRecentMedia(mediaItems) {
+    const recentContainer = document.getElementById('recent-media');
+    const recentItems = mediaItems.slice(0, 6); // Show 6 most recent
+
+    if (recentItems.length === 0) {
+        recentContainer.innerHTML = '<div class="col-12 text-center text-muted">No media items found</div>';
+        return;
+    }
+
+    recentContainer.innerHTML = recentItems.map(item => `
+        <div class="col-md-4 col-lg-2 mb-3">
+            <div class="card h-100 border-0 shadow-sm media-card" onclick="viewMedia('${item.id}')">
+                <div class="card-body p-2 text-center">
+                    <div class="media-thumbnail mb-2">
+                        ${getMediaThumbnail(item.gcs_path)}
+                    </div>
+                    <h6 class="card-title small text-truncate">${getFileName(item.gcs_path)}</h6>
+                    <p class="card-text small text-muted">${item.contexts?.length || 0} descriptions</p>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function getMediaThumbnail(gcsPath) {
+    // ... existing code ...
+}
+</script>
+{% endblock %}

@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Reference - Photo Tales Gallery Documentation</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+        .content {
+            height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+        .nav-link {
+            transition: all 0.2s ease;
+        }
+        .nav-link:hover {
+            background-color: #f3f4f6;
+        }
+        .nav-link.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+        code {
+            background-color: #f3f4f6;
+            color: #1f2937;
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+        }
+        .endpoint {
+            border-left: 4px solid #3b82f6;
+            padding-left: 1rem;
+            margin-bottom: 2rem;
+        }
+        .method-get { border-left-color: #10b981; }
+        .method-post { border-left-color: #f59e0b; }
+        .method-put { border-left-color: #3b82f6; }
+        .method-delete { border-left-color: #ef4444; }
+        .method-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: white;
+        }
+        .method-badge.get { background-color: #10b981; }
+        .method-badge.post { background-color: #f59e0b; }
+        .method-badge.put { background-color: #3b82f6; }
+        .method-badge.delete { background-color: #ef4444; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <i class="fas fa-camera text-blue-600 text-2xl mr-3"></i>
+                    <h1 class="text-2xl font-bold text-gray-900">Photo Tales Gallery</h1>
+                    <span class="ml-3 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Documentation</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="https://github.com" class="text-gray-500 hover:text-gray-700">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="https://openai.com" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-robot text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <nav class="w-64 bg-white shadow-sm sidebar">
+            <div class="p-4">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Documentation</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="index.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-home mr-2"></i>Overview
+                        </a>
+                    </li>
+                    <li>
+                        <a href="architecture.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-sitemap mr-2"></i>Architecture
+                        </a>
+                    </li>
+                    <li>
+                        <a href="installation.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-download mr-2"></i>Installation
+                        </a>
+                    </li>
+                    <li>
+                        <a href="api.html" class="nav-link active block px-3 py-2 rounded-md text-sm font-medium">
+                            <i class="fas fa-code mr-2"></i>API Reference
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ai-integration.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-brain mr-2"></i>AI Integration
+                        </a>
+                    </li>
+                    <li>
+                        <a href="voice-features.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-microphone mr-2"></i>Voice Features
+                        </a>
+                    </li>
+                    <li>
+                        <a href="database.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-database mr-2"></i>Database Schema
+                        </a>
+                    </li>
+                    <li>
+                        <a href="deployment.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-rocket mr-2"></i>Deployment
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-1 content">
+            <div class="max-w-4xl mx-auto px-6 py-8">
+                <div class="prose prose-lg max-w-none">
+                    <h1 class="text-4xl font-bold text-gray-900 mb-6">API Reference</h1>
+                    
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-info-circle text-blue-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-blue-700">
+                                    <strong>Base URL:</strong> <code>http://localhost:5001/api</code> (development)<br>
+                                    <strong>Content-Type:</strong> <code>application/json</code><br>
+                                    <strong>Authentication:</strong> None required for development
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">API Endpoints</h2>
+
+                    <!-- Media Management -->
+                    <h3 class="text-xl font-bold text-gray-900 mb-4 mt-8">Media Management</h3>
+
+                    <div class="endpoint method-get">
+                        <div class="flex items-center mb-2">
+                            <span class="method-badge get mr-3">GET</span>
+                            <code class="text-lg">/api/media</code>
+                        </div>
+                        <p class="text-gray-600 mb-3">List all media items in the gallery</p>
+                        
+                        <h4 class="font-semibold text-gray-900 mb-2">Response</h4>
+                        <pre><code>[
+  {
+    "id": "doc123",
+    "gcs_path": "photos/image1.jpg",
+    "filename": "image1.jpg",
+    "description": "A beautiful sunset",
+    "summary": "Sunset at the beach",
+    "tags": ["sunset", "beach", "nature"],
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z",
+    "metadata": {
+      "file_size": 2048576,
+      "file_type": "image/jpeg",
+      "dimensions": {"width": 1920, "height": 1080}
+    }
+  }
+]</code></pre>
+                    </div>
+
+                    <div class="endpoint method-get">
+                        <div class="flex items-center mb-2">
+                            <span class="method-badge get mr-3">GET</span>
+                            <code class="text-lg">/api/media/{id}</code>
+                        </div>
+                        <p class="text-gray-600 mb-3">Get a specific media item by ID</p>
+                        
+                        <h4 class="font-semibold text-gray-900 mb-2">Parameters</h4>
+                        <ul class="text-gray-600 mb-3">
+                            <li><code>id</code> (string, required) - Media item document ID</li>
+                        </ul>
+
+                        <h4 class="font-semibold text-gray-900 mb-2">Response</h4>
+                        <pre><code>{
+  "id": "doc123",
+  "gcs_path": "photos/image1.jpg",
+  "filename": "image1.jpg",
+  "description": "A beautiful sunset",
+  "summary": "Sunset at the beach",
+  "tags": ["sunset", "beach", "nature"],
+  "created_at": "2024-01-15T10:30:00Z",
+  "updated_at": "2024-01-15T10:30:00Z",
+  "contexts": [
+    {
+      "id": "ctx123",
+      "text": "This was taken during our vacation in Hawaii",
+      "type": "interview",
+      "created_at": "2024-01-15T11:00:00Z"
+    }
+  ],
+  "metadata": {
+    "file_size": 2048576,
+    "file_type": "image/jpeg",
+    "dimensions": {"width": 1920, "height": 1080}
+  }
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint method-get">
+                        <div class="flex items-center mb-2">
+                            <span class="method-badge get mr-3">GET</span>
+                            <code class="text-lg">/api/media/{id}/preview</code>
+                        </div>
+                        <p class="text-gray-600 mb-3">Get image preview (serves the actual image file)</p>
+                        
+                        <h4 class="font-semibold text-gray-900 mb-2">Parameters</h4>
+                        <ul class="text-gray-600 mb-3">
+                            <li><code>id</code> (string, required) - Media item document ID</li>
+                        </ul>
+
+                        <h4 class="font-semibold text-gray-900 mb-2">Response</h4>
+                        <p class="text-gray-600">Binary image file with appropriate Content-Type header</p>
+                    </div>
+
+                    <div class="endpoint method-put">
+                        <div class="flex items-center mb-2">
+                            <span class="method-badge put mr-3">PUT</span>
+                            <code class="text-lg">/api/media/{id}/description</code>
+                        </div>
+                        <p class="text-gray-600 mb-3">Update the description of a media item</p>
+                        
+                        <h4 class="font-semibold text-gray-900 mb-2">Parameters</h4>
+                        <ul class="text-gray-600 mb-3">
+                            <li><code>id</code> (string, required) - Media item document ID</li>
+                        </ul>
+
+                        <h4 class="font-semibold text-gray-900 mb-2">Request Body</h4>
+                        <pre><code>{
+  "description": "Updated description of the photo"
+}</code></pre>
+
+                        <h4 class="font-semibold text-gray-900 mb-2">Response</h4>
+                        <pre><code>{
+  "success": true,
+  "message": "Description updated successfully"
+}</code></pre>
+                    </div>
+
+                    <!-- AI Features -->
+                    <h3 class="text-xl font-bold text-gray-900 mb-4 mt-8">AI Features</h3>
+
+                    <div class="endpoint method-post">
+                        <div class="flex items-center mb-2">
+                            <span class="method-badge post mr-3">POST</span>
+                            <code class="text-lg">/api/media/{id}/generate-summary</code>
+                        </div>
+                        <p class="text-gray-600 mb-3">Generate AI summary for a media item</p>
+                        
+                        <h4 class="font-semibold text-gray-900 mb-2">Parameters</h4>
+                        <ul class="text-gray-600 mb-3">
+                            <li><code>id</code> (string, required) - Media item document ID</li>
+                        </ul>
+
+                        <h4 class="font-semibold text-gray-900 mb-2">Request Body</h4>
+                        <pre><code>{}</code></pre>
+
+                        <h4 class="font-semibold text-gray-900 mb-2">Response</h4>
+                        <pre><code>{
+  "summary": "A beautiful sunset over the ocean",
+  "title": "Ocean Sunset",
+  "summary_text": "This photo captures a stunning sunset over the ocean with vibrant orange and pink hues reflecting off the water."
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint method-post">
+                        <div class="flex items-center mb-2">
+                            <span class="method-badge post mr-3">POST</span>
+                            <code class="text-lg">/api/media/{id}/generate-tags</code>
+                        </div>
+                        <p class="text-gray-600 mb-3">Generate AI tags for a media item</p>
+                        
+                        <h4 class="font-semibold text-gray-900 mb-2">Parameters</h4>
+                        <ul class="text-gray-600 mb-3">
+                            <li><code>id</code> (string, required) - Media item document ID</li>
+                        </ul>
+
+                        <h4 class="font-semibold text-gray-900 mb-2">Response</h4>
+                        <pre><code>{
+  "tags": ["sunset", "ocean", "nature", "landscape", "golden hour"],
+  "message": "Tags generated successfully"
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint method-post">
+                        <div class="flex items-center mb-2">
+                            <span class="method-badge post mr-3">POST</span>
+                            <code class="text-lg">/api/ai-photographer/summary</code>
+                        </div>
+                        <p class="text-gray-600 mb-3">Generate photographer summary based on tag</p>
+                        
+                        <h4 class="font-semibold text-gray-900 mb-2">Request Body</h4>
+                        <pre><code>{
+  "tag": "vacation",
+  "model": "gpt-4o-mini"
+}</code></pre>
+
+                        <h4 class="font-semibold text-gray-900 mb-2">Response</h4>
+                        <pre><code>{
+  "summary": "I love taking photos during vacations, especially of landscapes and sunsets.",
+  "photo_count": 15,
+  "tag": "vacation"
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint method-post">
+                        <div class="flex items-center mb-2">
+                            <span class="method-badge post mr-3">POST</span>
+                            <code class="text-lg">/api/generate-photographer-summary</code>
+                        </div>
+                        <p class="text-gray-600 mb-3">Generate conversational AI response for photographer</p>
+                        
+                        <h4 class="font-semibold text-gray-900 mb-2">Request Body</h4>
+                        <pre><code>{
+  "tag": "vacation",
+  "userMessage": "Tell me about this photo",
+  "conversationHistory": [
+    {"role": "user", "content": "Hello"},
+    {"role": "assistant", "content": "Hi! I'm your AI assistant."}
+  ],
+  "model": "gpt-4o-mini"
+}</code></pre>
+
+                        <h4 class="font-semibold text-gray-900 mb-2">Response</h4>
+                        <pre><code>{
+  "summary": "Oh yeah, that was a great day - remember how excited we were?",
+  "tag": "vacation",
+  "photo_count": 15
+}</code></pre>
+                    </div>
+
+                    <!-- Interview System -->
+                    <h3 class="text-xl font-bold text-gray-900 mb-4 mt-8">Interview System</h3>
+
+                    <div class="endpoint method-post">
+                        <div class="flex items-center mb-2">
+                            <span class="method-badge post mr-3">POST</span>
+                            <code class="text-lg">/api/media/{id}/interview/start</code>
+                        </div>
+                        <p class="text-gray-600 mb-3">Start an AI interview for a media item</p>
+                        
+                        <h4 class="font-semibold text-gray-900 mb-2">Parameters</h4>
+                        <ul class="text-gray-600 mb-3">
+                            <li><code>id</code> (string, required) - Media item document ID</li>
+                        </ul>
+
+                        <h4 class="font-semibold text-gray-900 mb-2">Response</h4>
+                        <pre><code>{
+  "media_id": "doc123",
+  "ai_question": "Where was this photo taken?",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are Memory Gatherer..."
+    },
+    {
+      "role": "assistant",
+      "content": "Where was this photo taken?"
+    }
+  ]
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint method-post">
+                        <div class="flex items-center mb-2">
+                            <span class="method-badge post mr-3">POST</span>
+                            <code class="text-lg">/api/media/{id}/interview/chat</code>
+                        </div>
+                        <p class="text-gray-600 mb-3">Continue an AI interview conversation</p>
+                        
+                        <h4 class="font-semibold text-gray-900 mb-2">Parameters</h4>
+                        <ul class="text-gray-600 mb-3">
+                            <li><code>id</code> (string, required) - Media item document ID</li>
+                        </ul>
+
+                        <h4 class="font-semibold text-gray-900 mb-2">Request Body</h4>
+                        <pre><code>{
+  "user_text": "It was taken in Hawaii during our vacation",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are Memory Gatherer..."
+    },
+    {
+      "role": "assistant",
+      "content": "Where was this photo taken?"
+    },
+    {
+      "role": "user",
+      "content": "It was taken in Hawaii during our vacation"
+    }
+  ]
+}</code></pre>
+
+                        <h4 class="font-semibold text-gray-900 mb-2">Response</h4>
+                        <pre><code>{
+  "media_id": "doc123",
+  "ai_question": "That sounds wonderful! What was the best part of your Hawaii vacation?",
+  "messages": [
+    // ... previous messages plus new assistant message
+  ]
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint method-post">
+                        <div class="flex items-center mb-2">
+                            <span class="method-badge post mr-3">POST</span>
+                            <code class="text-lg">/api/media/{id}/interview/save</code>
+                        </div>
+                        <p class="text-gray-600 mb-3">Save interview conversation as context</p>
+                        
+                        <h4 class="font-semibold text-gray-900 mb-2">Parameters</h4>
+                        <ul class="text-gray-600 mb-3">
+                            <li><code>id</code> (string, required) - Media item document ID</li>
+                        </ul>
+
+                        <h4 class="font-semibold text-gray-900 mb-2">Request Body</h4>
+                        <pre><code>{
+  "messages": [
+    {
+      "role": "assistant",
+      "content": "Where was this photo taken?"
+    },
+    {
+      "role": "user",
+      "content": "It was taken in Hawaii during our vacation"
+    }
+  ]
+}</code></pre>
+
+                        <h4 class="font-semibold text-gray-900 mb-2">Response</h4>
+                        <pre><code>{
+  "context_id": "ctx123",
+  "message": "Interview saved successfully"
+}</code></pre>
+                    </div>
+
+                    <!-- Context Management -->
+                    <h3 class="text-xl font-bold text-gray-900 mb-4 mt-8">Context Management</h3>
+
+                    <div class="endpoint method-get">
+                        <div class="flex items-center mb-2">
+                            <span class="method-badge get mr-3">GET</span>
+                            <code class="text-lg">/api/media/{id}/contexts</code>
+                        </div>
+                        <p class="text-gray-600 mb-3">Get all context entries for a media item</p>
+                        
+                        <h4 class="font-semibold text-gray-900 mb-2">Parameters</h4>
+                        <ul class="text-gray-600 mb-3">
+                            <li><code>id</code> (string, required) - Media item document ID</li>
+                        </ul>
+
+                        <h4 class="font-semibold text-gray-900 mb-2">Response</h4>
+                        <pre><code>[
+  {
+    "id": "ctx123",
+    "text": "This was taken during our vacation in Hawaii",
+    "type": "interview",
+    "created_at": "2024-01-15T11:00:00Z",
+    "updated_at": "2024-01-15T11:00:00Z"
+  }
+]</code></pre>
+                    </div>
+
+                    <div class="endpoint method-post">
+                        <div class="flex items-center mb-2">
+                            <span class="method-badge post mr-3">POST</span>
+                            <code class="text-lg">/api/media/{id}/contexts</code>
+                        </div>
+                        <p class="text-gray-600 mb-3">Add a new context entry</p>
+                        
+                        <h4 class="font-semibold text-gray-900 mb-2">Parameters</h4>
+                        <ul class="text-gray-600 mb-3">
+                            <li><code>id</code> (string, required) - Media item document ID</li>
+                        </ul>
+
+                        <h4 class="font-semibold text-gray-900 mb-2">Request Body</h4>
+                        <pre><code>{
+  "text": "This photo reminds me of our family vacation"
+}</code></pre>
+
+                        <h4 class="font-semibold text-gray-900 mb-2">Response</h4>
+                        <pre><code>{
+  "id": "ctx456",
+  "message": "Context added successfully"
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint method-put">
+                        <div class="flex items-center mb-2">
+                            <span class="method-badge put mr-3">PUT</span>
+                            <code class="text-lg">/api/media/{id}/contexts/{context_id}</code>
+                        </div>
+                        <p class="text-gray-600 mb-3">Update a context entry</p>
+                        
+                        <h4 class="font-semibold text-gray-900 mb-2">Parameters</h4>
+                        <ul class="text-gray-600 mb-3">
+                            <li><code>id</code> (string, required) - Media item document ID</li>
+                            <li><code>context_id</code> (string, required) - Context entry ID</li>
+                        </ul>
+
+                        <h4 class="font-semibold text-gray-900 mb-2">Request Body</h4>
+                        <pre><code>{
+  "text": "Updated context text"
+}</code></pre>
+
+                        <h4 class="font-semibold text-gray-900 mb-2">Response</h4>
+                        <pre><code>{
+  "success": true,
+  "message": "Context updated successfully"
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint method-delete">
+                        <div class="flex items-center mb-2">
+                            <span class="method-badge delete mr-3">DELETE</span>
+                            <code class="text-lg">/api/media/{id}/contexts/{context_id}</code>
+                        </div>
+                        <p class="text-gray-600 mb-3">Delete a context entry</p>
+                        
+                        <h4 class="font-semibold text-gray-900 mb-2">Parameters</h4>
+                        <ul class="text-gray-600 mb-3">
+                            <li><code>id</code> (string, required) - Media item document ID</li>
+                            <li><code>context_id</code> (string, required) - Context entry ID</li>
+                        </ul>
+
+                        <h4 class="font-semibold text-gray-900 mb-2">Response</h4>
+                        <pre><code>{
+  "success": true,
+  "message": "Context deleted successfully"
+}</code></pre>
+                    </div>
+
+                    <!-- Utility Endpoints -->
+                    <h3 class="text-xl font-bold text-gray-900 mb-4 mt-8">Utility Endpoints</h3>
+
+                    <div class="endpoint method-get">
+                        <div class="flex items-center mb-2">
+                            <span class="method-badge get mr-3">GET</span>
+                            <code class="text-lg">/api/health</code>
+                        </div>
+                        <p class="text-gray-600 mb-3">Health check endpoint</p>
+                        
+                        <h4 class="font-semibold text-gray-900 mb-2">Response</h4>
+                        <pre><code>{
+  "status": "healthy",
+  "timestamp": "2024-01-15T10:30:00Z"
+}</code></pre>
+                    </div>
+
+                    <div class="endpoint method-post">
+                        <div class="flex items-center mb-2">
+                            <span class="method-badge post mr-3">POST</span>
+                            <code class="text-lg">/api/media/generate-year-tags</code>
+                        </div>
+                        <p class="text-gray-600 mb-3">Generate year tags from photo metadata</p>
+                        
+                        <h4 class="font-semibold text-gray-900 mb-2">Response</h4>
+                        <pre><code>{
+  "updated_count": 25,
+  "updated_items": [
+    {
+      "id": "doc123",
+      "filename": "photo1.jpg",
+      "year": "2023"
+    }
+  ],
+  "skipped_items": [
+    {
+      "id": "doc456",
+      "filename": "photo2.jpg",
+      "reason": "no metadata"
+    }
+  ],
+  "message": "Year tags added to 25 photos. 5 photos skipped."
+}</code></pre>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4 mt-8">Error Responses</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Common Error Codes</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-medium text-gray-900">400 Bad Request</h4>
+                                <p class="text-gray-600 text-sm">Invalid request parameters or missing required fields</p>
+                                <pre class="mt-2"><code>{
+  "error": "Missing required field: description"
+}</code></pre>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900">404 Not Found</h4>
+                                <p class="text-gray-600 text-sm">Resource not found</p>
+                                <pre class="mt-2"><code>{
+  "error": "Media item not found"
+}</code></pre>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900">500 Internal Server Error</h4>
+                                <p class="text-gray-600 text-sm">Server error or external service failure</p>
+                                <pre class="mt-2"><code>{
+  "error": "Failed to generate summary: OpenAI API error"
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Rate Limiting</h2>
+                    
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-yellow-700">
+                                    <strong>Rate Limits:</strong> AI endpoints are subject to OpenAI API rate limits. 
+                                    The system implements basic rate limiting to prevent abuse and manage costs.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Frontend Integration</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">TypeScript Interfaces</h3>
+                        <p class="text-gray-600 mb-4">The frontend uses these TypeScript interfaces for type safety:</p>
+                        
+                        <pre><code>export interface MediaItem {
+  id: string;
+  file_path: string;
+  filename: string;
+  title?: string;
+  summary?: string;
+  tags?: string[];
+  file_size?: number;
+  file_type?: string;
+  created_at: string;
+  updated_at: string;
+  contexts?: Context[];
+  image_metadata?: any;
+}
+
+export interface Context {
+  id: string;
+  text: string;
+  context_type?: string;
+  created_at: string;
+}
+
+export interface InterviewMessage {
+  role: 'system' | 'user' | 'assistant';
+  content?: string;
+  type?: 'text' | 'image_url';
+  data?: string;
+}</code></pre>
+                    </div>
+
+                    <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-8">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-check-circle text-green-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-green-700">
+                                    <strong>API Benefits:</strong> The RESTful API design provides a clean, consistent interface for all operations. 
+                                    All endpoints return JSON responses and follow standard HTTP status codes.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Simple navigation highlighting
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
