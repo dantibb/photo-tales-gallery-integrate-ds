@@ -112,6 +112,11 @@
                         </a>
                     </li>
                     <li>
+                        <a href="enhanced-storage.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <i class="fas fa-rocket mr-2"></i>Enhanced Storage
+                        </a>
+                    </li>
+                    <li>
                         <a href="deployment.html" class="nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
                             <i class="fas fa-rocket mr-2"></i>Deployment
                         </a>
@@ -133,7 +138,8 @@
                             </div>
                             <div class="ml-3">
                                 <p class="text-sm text-blue-700">
-                                    Photo Tales Gallery uses Google Cloud Firestore as its primary database, with TinyDB for local development.
+                                    Photo Tales Gallery now features an enhanced data storage architecture supporting long documents, easy updates, and RAG LLM capabilities. 
+                                    The system supports both cloud (PostgreSQL + ChromaDB) and local (SQLite) deployments.
                                 </p>
                             </div>
                         </div>
@@ -141,37 +147,171 @@
 
                     <h2 class="text-2xl font-bold text-gray-900 mb-4">Database Overview</h2>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                         <div class="bg-white p-6 rounded-lg shadow-sm border">
                             <div class="flex items-center mb-4">
                                 <i class="fas fa-cloud text-blue-600 text-2xl mr-3"></i>
-                                <h3 class="text-lg font-semibold text-gray-900">Production: Firestore</h3>
+                                <h3 class="text-lg font-semibold text-gray-900">Production: PostgreSQL + ChromaDB</h3>
                             </div>
                             <ul class="text-sm text-gray-600 space-y-2">
-                                <li>• NoSQL document database</li>
-                                <li>• Real-time synchronization</li>
-                                <li>• Automatic scaling</li>
-                                <li>• Offline support</li>
-                                <li>• Built-in security rules</li>
+                                <li>• PostgreSQL for structured data</li>
+                                <li>• ChromaDB for vector embeddings</li>
+                                <li>• Unlimited text length support</li>
+                                <li>• RAG LLM ready</li>
+                                <li>• Advanced querying capabilities</li>
                             </ul>
                         </div>
 
                         <div class="bg-white p-6 rounded-lg shadow-sm border">
                             <div class="flex items-center mb-4">
                                 <i class="fas fa-file-alt text-green-600 text-2xl mr-3"></i>
-                                <h3 class="text-lg font-semibold text-gray-900">Development: TinyDB</h3>
+                                <h3 class="text-lg font-semibold text-gray-900">Development: SQLite</h3>
                             </div>
                             <ul class="text-sm text-gray-600 space-y-2">
-                                <li>• JSON-based local storage</li>
+                                <li>• SQLite for local development</li>
                                 <li>• No external dependencies</li>
-                                <li>• Simple file-based storage</li>
-                                <li>• Easy development setup</li>
-                                <li>• Mirrors Firestore structure</li>
+                                <li>• Full SQL support</li>
+                                <li>• Easy setup and testing</li>
+                                <li>• Mirrors production structure</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-archive text-purple-600 text-2xl mr-3"></i>
+                                <h3 class="text-lg font-semibold text-gray-900">Legacy: Firestore + TinyDB</h3>
+                            </div>
+                            <ul class="text-sm text-gray-600 space-y-2">
+                                <li>• Still supported for compatibility</li>
+                                <li>• NoSQL document database</li>
+                                <li>• Real-time synchronization</li>
+                                <li>• Automatic scaling</li>
+                                <li>• Migration tools available</li>
                             </ul>
                         </div>
                     </div>
 
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Collections & Documents</h2>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Enhanced Data Store Schema</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                            <i class="fas fa-database text-blue-600 mr-2"></i>Documents Table (PostgreSQL/SQLite)
+                        </h3>
+                        <p class="text-gray-600 mb-4">The core table for storing all document types including interviews, website content, and notes.</p>
+                        
+                        <div class="schema-box">
+                            <h4 class="font-bold mb-2">Table Structure</h4>
+                            <pre class="text-sm"><code>CREATE TABLE documents (
+    id UUID PRIMARY KEY,                    -- Unique document identifier
+    type VARCHAR(50) NOT NULL,              -- Document type (interview, website, media, note)
+    title VARCHAR(500) NOT NULL,            -- Document title
+    content TEXT NOT NULL,                  -- Full document content (unlimited length)
+    metadata JSONB NOT NULL,                -- Flexible metadata storage
+    source VARCHAR(500),                    -- Source of the document
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Document Types</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• <code>interview</code> - AI interview transcripts</li>
+                                    <li>• <code>website</code> - Scraped website content</li>
+                                    <li>• <code>media</code> - Photo/video metadata</li>
+                                    <li>• <code>note</code> - User notes and planning</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Metadata Examples</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• <code>people</code> - Array of people mentioned</li>
+                                    <li>• <code>locations</code> - Array of locations</li>
+                                    <li>• <code>tags</code> - Array of tags</li>
+                                    <li>• <code>date</code> - Document date</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                            <i class="fas fa-link text-green-600 mr-2"></i>Document Relations Table
+                        </h3>
+                        <p class="text-gray-600 mb-4">Stores relationships between documents for creating connections and semantic links.</p>
+                        
+                        <div class="schema-box">
+                            <h4 class="font-bold mb-2">Table Structure</h4>
+                            <pre class="text-sm"><code>CREATE TABLE document_relations (
+    id UUID PRIMARY KEY,
+    source_doc_id UUID REFERENCES documents(id),
+    target_doc_id UUID REFERENCES documents(id),
+    relation_type VARCHAR(100),             -- Type of relationship
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Relation Types</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• <code>related</code> - Related content</li>
+                                    <li>• <code>sequence</code> - Sequential documents</li>
+                                    <li>• <code>reference</code> - Reference links</li>
+                                    <li>• <code>duplicate</code> - Duplicate content</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Features</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Bidirectional relationships</li>
+                                    <li>• Flexible link types</li>
+                                    <li>• Easy querying</li>
+                                    <li>• Scalable structure</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-sm border mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                            <i class="fas fa-brain text-purple-600 mr-2"></i>ChromaDB Vector Storage
+                        </h3>
+                        <p class="text-gray-600 mb-4">Vector embeddings for semantic search and RAG LLM capabilities.</p>
+                        
+                        <div class="schema-box">
+                            <h4 class="font-bold mb-2">Collection Structure</h4>
+                            <pre class="text-sm"><code>Collection: "documents"
+- Documents: Full text content
+- Metadatas: Document metadata + PostgreSQL ID
+- Embeddings: Vector representations
+- IDs: Document UUIDs</code></pre>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Vector Features</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Semantic similarity search</li>
+                                    <li>• RAG LLM integration</li>
+                                    <li>• Metadata filtering</li>
+                                    <li>• Cosine similarity</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">Usage</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Find similar documents</li>
+                                    <li>• Context-aware search</li>
+                                    <li>• AI-powered recommendations</li>
+                                    <li>• Content discovery</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Legacy Collections & Documents</h2>
                     
                     <div class="space-y-6 mb-8">
                         <!-- Media Items Collection -->
@@ -331,6 +471,60 @@
                                 <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold mt-1">3</div>
                                 <div>
                                     <p class="text-gray-700"><strong>Contexts → AI Interviews:</strong> Contexts store conversation history for AI interactions.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Enhanced Data Store Usage</h2>
+                    
+                    <div class="space-y-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Python API Examples</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Adding an Interview Transcript</h4>
+                                    <pre class="text-sm"><code>from app.simple_data_store import SimpleDataStore
+
+store = SimpleDataStore()
+
+# Add a long interview transcript
+interview_id = store.add_interview_transcript(
+    title="Paris Vacation Interview - John and Sarah",
+    content="Very long interview content with detailed conversation...",
+    metadata={
+        "people": ["John", "Sarah", "Emma"],
+        "locations": ["Paris", "Eiffel Tower", "Seine River"],
+        "date": "2022-05-15",
+        "tags": ["Paris", "Eiffel Tower", "family", "vacation"]
+    }
+)</code></pre>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Adding Website Content</h4>
+                                    <pre class="text-sm"><code># Add website content
+website_id = store.add_website_content(
+    title="Paris Travel Guide - Best Family Activities",
+    content="Full website article content...",
+    url="https://example.com/paris-guide",
+    metadata={
+        "tags": ["Paris", "family travel", "guide"],
+        "content_type": "travel guide"
+    }
+)</code></pre>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-900 mb-2">Semantic Search</h4>
+                                    <pre class="text-sm"><code># Search for content
+results = store.search_documents("Paris vacation with family")
+
+# Get documents by type
+interviews = store.get_documents_by_type("interview")
+
+# Get related documents
+related = store.get_related_documents(interview_id)
+
+store.close()</code></pre>
                                 </div>
                             </div>
                         </div>

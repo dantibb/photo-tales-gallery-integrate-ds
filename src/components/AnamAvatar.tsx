@@ -86,7 +86,7 @@ export const AnamAvatar: React.FC<AnamAvatarProps> = ({
             const tagToUse = currentTag;
             
             // Call your existing backend API to generate a response
-            const response = await fetch('http://localhost:5001/api/generate-photographer-summary', {
+            const response = await fetch('http://localhost:8080/api/generate-photographer-summary', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

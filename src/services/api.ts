@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = 'http://localhost:8080/api';
 
 export interface MediaItem {
   id: string;
@@ -257,11 +257,16 @@ export const mediaApi = {
     return response.json();
   },
 
-  async uploadMedia(files: File[]): Promise<{ message: string; uploaded_items: MediaItem[] }> {
+  async uploadMedia(files: File[], mediaFileDetails?: { name: string; description: string }): Promise<{ message: string; uploaded_items: MediaItem[]; media_file_name?: string; media_file_description?: string }> {
     const formData = new FormData();
     files.forEach(file => {
       formData.append('files', file);
     });
+
+    if (mediaFileDetails) {
+      formData.append('media_file_name', mediaFileDetails.name);
+      formData.append('media_file_description', mediaFileDetails.description);
+    }
 
     const response = await fetch(`${API_BASE_URL}/media/upload`, {
       method: 'POST',

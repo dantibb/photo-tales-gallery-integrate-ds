@@ -22,6 +22,7 @@ export interface MediaItem {
   created_at: string;
   updated_at: string;
   contexts?: Context[];
+  metadata?: Record<string, any>;
 }
 
 export interface Context {

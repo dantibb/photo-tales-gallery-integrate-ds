@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { mediaApi } from "../services/api";
 import { MediaItem } from "../types/photo.types";
 import { TagEditor } from "./TagEditor";
-import { Tag, AlertCircle, FileX } from "lucide-react";
+import { Tag, AlertCircle, FileX, Mic } from "lucide-react";
 
 interface PhotoCardProps {
   media: MediaItem;
@@ -27,6 +27,20 @@ export function PhotoCard({ media, onClick, size = 'sm', onTagsUpdated, onFileMi
     let isMounted = true;
     setImageUrl(null);
     setLoadError(false);
+    
+    // Check if this is a transcript placeholder (no media preview needed)
+    const isTranscriptPlaceholder = media.metadata?.type === 'transcript_placeholder';
+    
+    if (isTranscriptPlaceholder) {
+      // For transcripts, skip media preview loading
+      if (isMounted) {
+        setIsLoading(false);
+        setLoadError(false);
+        onFileLoadSuccess?.(media.id);
+      }
+      return;
+    }
+    
     const loadWithRetry = async (retries = 3, delay = 500) => {
       setIsLoading(true);
       for (let attempt = 1; attempt <= retries; attempt++) {
@@ -94,44 +108,63 @@ export function PhotoCard({ media, onClick, size = 'sm', onTagsUpdated, onFileMi
       style={sizeStyles[size]}
     >
       <div className="relative aspect-[4/3] overflow-hidden">
-        {isLoading ? (
-          <div className="w-full h-full bg-muted flex items-center justify-center">
-            <div className="text-muted-foreground">Loading...</div>
-          </div>
-        ) : imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={media.filename}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-            loading="lazy"
-          />
-        ) : loadError ? (
-          <div className="w-full h-full bg-muted flex flex-col items-center justify-center p-4">
-            <FileX className="h-8 w-8 text-muted-foreground mb-2" />
-            <div className="text-muted-foreground text-sm text-center mb-2">
-              File not found
+        {/* Check if this is a transcript placeholder */}
+        {media.metadata?.type === 'transcript_placeholder' ? (
+          // Transcript card - show text content instead of image
+          <div className="w-full h-full bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950/50 dark:to-indigo-900/50 flex flex-col items-center justify-center p-4 text-center">
+            <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center mb-3">
+              <Mic className="h-6 w-6 text-blue-600 dark:text-blue-400" />
             </div>
-            <div className="text-xs text-muted-foreground text-center mb-3">
-              {media.filename}
-            </div>
-            {onFileMissing && (
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleFileMissing();
-                }}
-                className="text-xs"
-              >
-                Remove from database
-              </Button>
-            )}
+            <h3 className="font-semibold text-sm text-blue-900 dark:text-blue-100 mb-2 line-clamp-2">
+              {media.title || media.description || 'Transcript'}
+            </h3>
+            <p className="text-xs text-blue-700 dark:text-blue-300 line-clamp-3">
+              {media.metadata?.content_preview || 'Interview transcript'}
+            </p>
           </div>
         ) : (
-          <div className="w-full h-full bg-muted flex items-center justify-center">
-            <div className="text-muted-foreground">No image</div>
-          </div>
+          // Regular media card
+          <>
+            {isLoading ? (
+              <div className="w-full h-full bg-muted flex items-center justify-center">
+                <div className="text-muted-foreground">Loading...</div>
+              </div>
+            ) : imageUrl ? (
+              <img
+                src={imageUrl}
+                alt={media.filename}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                loading="lazy"
+              />
+            ) : loadError ? (
+              <div className="w-full h-full bg-muted flex flex-col items-center justify-center p-4">
+                <FileX className="h-8 w-8 text-muted-foreground mb-2" />
+                <div className="text-muted-foreground text-sm text-center mb-2">
+                  File not found
+                </div>
+                <div className="text-xs text-muted-foreground text-center mb-3">
+                  {media.filename}
+                </div>
+                {onFileMissing && (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleFileMissing();
+                    }}
+                    className="text-xs"
+                  >
+                    Remove from database
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <div className="w-full h-full bg-muted flex items-center justify-center">
+                <div className="text-muted-foreground">No image</div>
+              </div>
+            )}
+          </>
         )}
 
         {/* Tags overlay */}

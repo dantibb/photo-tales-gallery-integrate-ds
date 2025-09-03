@@ -10,7 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { Grid, LayoutGrid, RefreshCw, X, User, Sparkles, Loader2, Bug, BarChart2, ChevronLeft, ChevronRight, Mic, MoreVertical, MessageSquare, Send, Plus } from "lucide-react";
+import { Grid, LayoutGrid, RefreshCw, X, User, Sparkles, Loader2, Bug, BarChart2, ChevronLeft, ChevronRight, Mic, MoreVertical, MessageSquare, Send, Plus, Globe, FileText } from "lucide-react";
 import { mediaApi, contextsApi } from "../services/api";
 import { MediaItem } from "../types/photo.types";
 import { AIInterview } from "./AIInterview";
@@ -21,7 +21,8 @@ import { useToast } from "../hooks/use-toast";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import React, { useRef } from "react";
 import { AnamAvatar } from "./AnamAvatar";
-import { AddEvent } from "./AddEvent";
+import { AddMediaFile } from "./AddMediaFile";
+import { ContentImporter } from "./ContentImporter";
 
 // TalkingHead component: simple SVG with animated mouth
 const TalkingHead: React.FC = () => (
@@ -65,11 +66,19 @@ export function PhotoGallery() {
   const [dashboardData, setDashboardData] = useState<{ tag: string; wordCount: number }[]>([]);
   const [isDashboardLoading, setIsDashboardLoading] = useState(false);
 
+  // Debug logging for modal state
+  useEffect(() => {
+    console.log('🎭 Modal state changed:', { selectedMediaId, isModalOpen });
+  }, [selectedMediaId, isModalOpen]);
+
   const { toast } = useToast();
   const [isGeneratingYearTags, setIsGeneratingYearTags] = useState(false);
   const [talking, setTalking] = useState(false);
   const [missingFiles, setMissingFiles] = useState<Set<string>>(new Set());
-  const [showAddEvent, setShowAddEvent] = useState(false);
+  const [showAddMediaFile, setShowAddMediaFile] = useState(false);
+  const [showContentImporter, setShowContentImporter] = useState(false);
+  const [enhancedSearchResults, setEnhancedSearchResults] = useState<any[]>([]);
+  const [isEnhancedSearching, setIsEnhancedSearching] = useState(false);
 
   // Save AI interface mode preference
   const handleAiInterfaceModeChange = (mode: AIInterfaceMode) => {
@@ -83,6 +92,40 @@ export function PhotoGallery() {
     localStorage.setItem('ai-model', model);
   };
 
+  // Enhanced search across all content types
+  const performEnhancedSearch = async (query: string) => {
+    if (!query.trim()) {
+      setEnhancedSearchResults([]);
+      return;
+    }
+
+    setIsEnhancedSearching(true);
+    try {
+              const response = await fetch('http://localhost:8080/api/documents/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: query.trim(),
+          limit: 10
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setEnhancedSearchResults(data.results || []);
+      } else {
+        setEnhancedSearchResults([]);
+      }
+    } catch (error) {
+      console.error('Enhanced search failed:', error);
+      setEnhancedSearchResults([]);
+    } finally {
+      setIsEnhancedSearching(false);
+    }
+  };
+
   useEffect(() => {
     console.log('Talking effect triggered:', { isGeneratingSummary, aiSummary: !!aiSummary });
     if (isGeneratingSummary || aiSummary) {
@@ -94,6 +137,15 @@ export function PhotoGallery() {
       setTalking(false);
     }
   }, [aiSummary, isGeneratingSummary]);
+
+  // Enhanced search effect
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      performEnhancedSearch(filters.searchQuery);
+    }, 300); // Debounce search
+
+    return () => clearTimeout(timeoutId);
+  }, [filters.searchQuery]);
 
   // Debug logging
   useEffect(() => {
@@ -116,18 +168,24 @@ export function PhotoGallery() {
   }, [isGeneratingSummary]);
 
   const loadMediaItems = async () => {
+    console.log('=== loadMediaItems called ===');
     setIsLoading(true);
     try {
       console.log('Loading media items...');
+      console.log('Calling mediaApi.listMedia()...');
       const items = await mediaApi.listMedia();
+      console.log('API response received:', items);
       console.log('Loaded media items:', items.length, items);
       setMediaItems(items);
+      console.log('State updated with mediaItems:', items.length);
     } catch (error) {
       console.error('Failed to load media items:', error);
+      console.error('Error details:', error);
       // Show error to user
       alert(`Failed to load photos: ${error}`);
     } finally {
       setIsLoading(false);
+      console.log('Loading finished');
     }
   };
 
@@ -273,8 +331,10 @@ export function PhotoGallery() {
   }, [mediaItems, filters, missingFiles]);
 
   const handleMediaClick = (mediaId: string) => {
+    console.log('🖱️ PhotoCard clicked!', { mediaId });
     setSelectedMediaId(mediaId);
     setIsModalOpen(true);
+    console.log('📊 Modal state set:', { selectedMediaId: mediaId, isModalOpen: true });
   };
 
   const handleMemoryToggle = (tag: string) => {
@@ -389,6 +449,13 @@ export function PhotoGallery() {
     return 'sm';
   }
 
+  // Add this debug section right before the return statement
+  console.log('=== RENDERING ===');
+  console.log('mediaItems state:', mediaItems);
+  console.log('mediaItems length:', mediaItems.length);
+  console.log('isLoading:', isLoading);
+  console.log('selectedMediaId:', selectedMediaId);
+
   return (
     <div className="min-h-screen bg-background flex">
       {/* Left Sidebar */}
@@ -466,6 +533,36 @@ export function PhotoGallery() {
             value={filters.searchQuery}
             onChange={(value) => setFilters(prev => ({ ...prev, searchQuery: value }))}
           />
+          
+          {/* Enhanced Search Results */}
+          {filters.searchQuery && enhancedSearchResults.length > 0 && (
+            <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg border">
+              <h3 className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-3 flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                Found {enhancedSearchResults.length} related documents
+              </h3>
+              <div className="space-y-2">
+                {enhancedSearchResults.map((doc, index) => (
+                  <div key={doc.id} className="p-3 bg-white dark:bg-gray-800 rounded border">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <h4 className="font-medium text-sm">{doc.title}</h4>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Type: {doc.type} • {doc.content.length} characters
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {doc.content.substring(0, 150)}...
+                        </p>
+                      </div>
+                      <Badge variant="secondary" className="text-xs">
+                        {doc.type}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Tags Section */}
@@ -552,6 +649,36 @@ export function PhotoGallery() {
               <img src="/imirrorheader.png" alt="iMirror header" style={{ width: '100%', maxWidth: '960px', display: 'block' }} />
             </div>
           </div>
+          
+          {/* Navigation Bar */}
+          <div className="w-full flex justify-center mb-6">
+            <div className="flex items-center gap-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border p-2">
+              <Button
+                variant="ghost"
+                className="flex items-center gap-2"
+                onClick={() => setShowContentImporter(true)}
+              >
+                <Globe className="h-4 w-4" />
+                Import Content
+              </Button>
+              <Button
+                variant="ghost"
+                className="flex items-center gap-2"
+                onClick={() => setShowAddMediaFile(true)}
+              >
+                <Plus className="h-4 w-4" />
+                Add Media File
+              </Button>
+              <Button
+                variant="ghost"
+                className="flex items-center gap-2"
+                onClick={() => setIsDebugOpen(true)}
+              >
+                <Bug className="h-4 w-4" />
+                Debug
+              </Button>
+            </div>
+          </div>
           {/* AI Interface */}
           {filters.selectedTags.length === 1 && (
             <Card className="mb-6">
@@ -626,11 +753,11 @@ export function PhotoGallery() {
             </div>
             <div className="flex items-center gap-2">
               <Button
-                onClick={() => setShowAddEvent(true)}
+                onClick={() => setShowAddMediaFile(true)}
                 className="flex items-center gap-2"
               >
                 <Plus className="h-4 w-4" />
-                Add Event
+                Add Media File
               </Button>
               <AIInterfaceSelector
                 currentMode={aiInterfaceMode}
@@ -690,7 +817,13 @@ export function PhotoGallery() {
             </div>
           ) : (
             <div className={gridClasses}>
+              {/* Add this debug section */}
+              <div className="text-xs text-gray-500 mb-2 p-2 bg-gray-100 rounded">
+                Debug: Rendering {filteredMedia.length} photo cards from {mediaItems.length} total items
+              </div>
+              
               {filteredMedia.map((item) => {
+                console.log('Rendering photo card:', item.id, item.title, item.file_path);
                 const contexts = item.contexts || [];
                 const wordCount = contexts.reduce((sum, ctx) => sum + (ctx.text?.split(/\s+/).length || 0), 0);
                 const size = getSizeClass(wordCount);
@@ -760,9 +893,11 @@ export function PhotoGallery() {
 
       {/* Photo Modal */}
       <PhotoModal
+        key={`modal-${selectedMediaId}-${isModalOpen}`}
         mediaId={selectedMediaId}
         isOpen={isModalOpen}
         onClose={() => {
+          console.log('🚪 Closing modal');
           setIsModalOpen(false);
           setSelectedMediaId(null);
         }}
@@ -786,14 +921,38 @@ export function PhotoGallery() {
       )}
 
       {/* Add Event Modal */}
-      {showAddEvent && (
-        <AddEvent
-          onClose={() => setShowAddEvent(false)}
-          onEventAdded={() => {
-            setShowAddEvent(false);
+      {showAddMediaFile && (
+        <AddMediaFile
+          onClose={() => setShowAddMediaFile(false)}
+          onMediaFileAdded={() => {
+            setShowAddMediaFile(false);
             loadMediaItems();
           }}
         />
+      )}
+
+      {/* Content Importer Modal */}
+      {showContentImporter && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h2 className="text-xl font-semibold">Content Importer</h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowContentImporter(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="overflow-auto max-h-[calc(90vh-120px)]">
+              <ContentImporter onContentImported={() => {
+                setShowContentImporter(false);
+                loadMediaItems();
+              }} />
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Debug Window */}

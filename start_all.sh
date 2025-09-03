@@ -2,59 +2,91 @@
 
 set -e
 
-# 1. Install frontend dependencies
-echo "Installing frontend dependencies..."
+echo "🚀 Starting Photo Tales Gallery Application..."
+
+# 1. Check if Docker is running
+if ! docker info > /dev/null 2>&1; then
+    echo "❌ Docker is not running. Please start Docker first."
+    exit 1
+fi
+
+# 2. Install frontend dependencies
+echo "📦 Installing frontend dependencies..."
 npm install
 
-# 2. Install backend dependencies
-echo "Installing backend dependencies..."
+# 3. Install backend dependencies
+echo "🐍 Installing backend dependencies..."
 cd backend
-pip3 install -r requirements.txt
+if [ ! -d "venv" ]; then
+    echo "Creating Python virtual environment..."
+    python3 -m venv venv
+fi
 
-# 3. Ensure backend config.env exists
+echo "Activating virtual environment and installing dependencies..."
+source venv/bin/activate
+pip install -r requirements.txt
+
+# 4. Ensure backend config.env exists
 if [ ! -f config.env ]; then
-  echo "config.env not found. Copying from config.env.example..."
-  cp config.env.example config.env
+    echo "📝 config.env not found. Copying from config.env.example..."
+    cp config.env.example config.env
+    echo "⚠️  Please edit config.env and add your OpenAI API key!"
 fi
 
-# 4. Warn if config.env contains placeholder values
-WARN=0
-if grep -q '/path/to/your/service-account-key.json' config.env; then
-  echo "WARNING: GOOGLE_APPLICATION_CREDENTIALS is not set in backend/config.env."
-  WARN=1
-fi
-if grep -q 'your-gcs-bucket-name' config.env; then
-  echo "WARNING: GCS_BUCKET_NAME is not set in backend/config.env."
-  WARN=1
-fi
-if grep -q 'your-openai-api-key' config.env; then
-  echo "WARNING: OPENAI_API_KEY is not set in backend/config.env."
-  WARN=1
-fi
-if grep -q 'your-secret-key-here' config.env; then
-  echo "WARNING: FLASK_SECRET_KEY is not set in backend/config.env."
-  WARN=1
-fi
-if [ $WARN -eq 1 ]; then
-  echo "One or more environment variables in backend/config.env are placeholders. Please update them for full functionality."
-fi
+# 5. Start PostgreSQL and pgAdmin
+echo "🗄️  Starting PostgreSQL and pgAdmin..."
+docker-compose up -d
+
+echo "⏳ Waiting for PostgreSQL to be ready..."
+sleep 10
+
+# 6. Test database connection
+echo "🔍 Testing database connection..."
+python -c "
+from app.enhanced_data_store import EnhancedDataStore
+try:
+    store = EnhancedDataStore()
+    print('✅ Database connection successful!')
+    store.close()
+except Exception as e:
+    print(f'❌ Database connection failed: {e}')
+    print('Make sure PostgreSQL is running and config.env is set correctly.')
+    exit(1)
+"
 
 cd ..
 
-# 5. Start backend server in background
-echo "Starting backend server..."
-npm run dev:backend &
+# 7. Start backend server in background
+echo "🐍 Starting backend server..."
+cd backend
+source venv/bin/activate
+python main.py &
 BACKEND_PID=$!
+cd ..
 
-# 6. Start frontend server in background
-echo "Starting frontend server..."
+# 8. Start frontend server in background
+echo "📱 Starting frontend server..."
 npm run dev &
 FRONTEND_PID=$!
 
-echo "\nBoth servers are starting."
-echo "Backend PID: $BACKEND_PID"
-echo "Frontend PID: $FRONTEND_PID"
-echo "\nAccess the frontend at http://localhost:5173 (or as printed by Vite)."
+# 9. Save PIDs to a file for shutdown script
+echo $BACKEND_PID > .backend.pid
+echo $FRONTEND_PID > .frontend.pid
 
-echo "To stop both servers, run:"
-echo "  kill $BACKEND_PID $FRONTEND_PID" 
+echo ""
+echo "🎉 Both servers are starting!"
+echo "Backend PID: $BACKEND_PID (Flask on port 8080)"
+echo "Frontend PID: $FRONTEND_PID (Vite on port 5173)"
+echo ""
+echo "🌐 Access the application:"
+echo "   Frontend: http://localhost:5173"
+echo "   Backend API: http://localhost:8080"
+echo "   pgAdmin: http://localhost:5050 (admin@phototales.com / admin)"
+echo "   PostgreSQL: localhost:5432"
+echo ""
+echo "🛑 To stop all services, run:"
+echo "   ./shutdown.sh"
+echo ""
+echo "📊 To view logs:"
+echo "   Backend: tail -f backend/logs/app.log (if logging is enabled)"
+echo "   Docker: docker-compose logs -f (in backend directory)" 

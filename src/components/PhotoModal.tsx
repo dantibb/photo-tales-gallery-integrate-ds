@@ -18,6 +18,8 @@ interface PhotoModalProps {
 }
 
 export function PhotoModal({ mediaId, isOpen, onClose }: PhotoModalProps) {
+  console.log('🔍 PhotoModal component called with:', { mediaId, isOpen });
+  
   const [media, setMedia] = useState<MediaItem | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,26 +31,37 @@ export function PhotoModal({ mediaId, isOpen, onClose }: PhotoModalProps) {
   const [aiMessages, setAiMessages] = useState<any[]>([]);
 
   useEffect(() => {
+    console.log('🔍 PhotoModal useEffect triggered:', { mediaId, isOpen });
     if (mediaId && isOpen) {
+      console.log('📥 Loading media for modal...');
       loadMedia();
     }
   }, [mediaId, isOpen]);
 
+  // Debug logging for media state changes
+  useEffect(() => {
+    console.log('📊 Media state changed:', { media: media?.id, isLoading });
+  }, [media, isLoading]);
+
   const loadMedia = async () => {
     if (!mediaId) return;
     
+    console.log('📥 Starting to load media for ID:', mediaId);
     setIsLoading(true);
     try {
       const mediaData = await mediaApi.getMediaItem(mediaId);
+      console.log('📥 Media data loaded:', mediaData);
       setMedia(mediaData);
       
       // Load image preview
       const previewUrl = await mediaApi.getMediaPreview(mediaId);
+      console.log('📥 Image preview loaded:', previewUrl);
       setImageUrl(previewUrl);
     } catch (error) {
-      console.error('Failed to load media:', error);
+      console.error('❌ Failed to load media:', error);
     } finally {
       setIsLoading(false);
+      console.log('📥 Media loading completed');
     }
   };
 
@@ -183,6 +196,7 @@ export function PhotoModal({ mediaId, isOpen, onClose }: PhotoModalProps) {
 
   if (!media) return null;
 
+  console.log('🎭 PhotoModal about to return Dialog with isOpen:', isOpen);
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[85vw] w-full max-h-[85vh] bg-card border-border/50 p-0 animate-scale-in">

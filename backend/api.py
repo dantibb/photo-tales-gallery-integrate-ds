@@ -2,8 +2,7 @@ import os
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 from dotenv import load_dotenv
-from google.cloud import storage
-from firestore_db import FirestoreDB
+from app.enhanced_data_store import EnhancedDataStore
 import mimetypes
 from io import BytesIO
 from interviewer_bot import run_interview_chat
@@ -15,16 +14,8 @@ load_dotenv(dotenv_path='config.env')
 app = Flask(__name__)
 CORS(app)  # Enable CORS for React frontend
 
-# Example of how you might retrieve your Google Application Credentials
-google_app_creds = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
-
-# GCS setup
-GCS_BUCKET_NAME = os.getenv('GCS_BUCKET_NAME')
-storage_client = storage.Client()
-
-# Firestore setup
-FIRESTORE_DATABASE_NAME = os.getenv('FIRESTORE_DATABASE_NAME', '(default)')
-firestore_db = FirestoreDB(database_name=FIRESTORE_DATABASE_NAME)
+# Enhanced Data Store setup (PostgreSQL)
+enhanced_db = EnhancedDataStore()
 
 @app.route('/health')
 def health_check():
@@ -40,16 +31,16 @@ def list_media():
     gcs_files = [blob.name for blob in blobs]
 
     # Sync with Firestore
-    new_items = firestore_db.sync_gcs_files(gcs_files)
+    new_items = enhanced_db.sync_gcs_files(gcs_files)
     
     # Get all media items from Firestore
-    items = firestore_db.list_media_items()
+    items = enhanced_db.list_media_items()
     return jsonify(items)
 
 @app.route('/api/media/<doc_id>')
 def get_media_item(doc_id):
     """Get a specific media item by document ID."""
-    item = firestore_db.get_media_item(doc_id)
+    item = enhanced_db.get_media_item(doc_id)
     if item:
         return jsonify(item)
     return jsonify({"error": "Media item not found"}), 404
@@ -57,7 +48,7 @@ def get_media_item(doc_id):
 @app.route('/api/media/<doc_id>/preview')
 def preview_media(doc_id):
     """Preview media file from GCS."""
-    item = firestore_db.get_media_item(doc_id)
+    item = enhanced_db.get_media_item(doc_id)
     if not item:
         return jsonify({"error": "Media item not found"}), 404
     
@@ -88,7 +79,7 @@ def update_description(doc_id):
     data = request.get_json()
     description = data.get('description', '')
     
-    success = firestore_db.update_media_item(doc_id, description=description)
+    success = enhanced_db.update_media_item(doc_id, description=description)
     if success:
         return jsonify({"message": "Description updated successfully"})
     return jsonify({"error": "Failed to update description"}), 400
@@ -98,7 +89,7 @@ def update_description(doc_id):
 @app.route('/api/media/<media_id>/contexts', methods=['GET'])
 def get_contexts(media_id):
     """Get all context entries for a media item."""
-    contexts = firestore_db.get_contexts(media_id)
+    contexts = enhanced_db.get_contexts(media_id)
     return jsonify(contexts)
 
 @app.route('/api/media/<media_id>/contexts', methods=['POST'])
@@ -108,7 +99,7 @@ def add_context(media_id):
     if not data or 'text' not in data:
         return jsonify({"error": "Missing 'text' in request body"}), 400
     
-    context_id = firestore_db.add_context(media_id, data['text'])
+    context_id = enhanced_db.add_context(media_id, data['text'])
     return jsonify({"message": "Context added successfully", "id": context_id}), 201
 
 @app.route('/api/media/<media_id>/contexts/<context_id>', methods=['PUT'])
@@ -118,7 +109,7 @@ def update_context(media_id, context_id):
     if not data or 'text' not in data:
         return jsonify({"error": "Missing 'text' in request body"}), 400
 
-    success = firestore_db.update_context(media_id, context_id, data['text'])
+    success = enhanced_db.update_context(media_id, context_id, data['text'])
     if success:
         return jsonify({"message": "Context updated successfully"})
     return jsonify({"error": "Failed to update context"}), 400
@@ -126,7 +117,7 @@ def update_context(media_id, context_id):
 @app.route('/api/media/<media_id>/contexts/<context_id>', methods=['DELETE'])
 def delete_context(media_id, context_id):
     """Delete a specific context entry."""
-    success = firestore_db.delete_context(media_id, context_id)
+    success = enhanced_db.delete_context(media_id, context_id)
     if success:
         return jsonify({"message": "Context deleted successfully"})
     return jsonify({"error": "Failed to delete context"}), 400
@@ -136,7 +127,7 @@ def delete_context(media_id, context_id):
 @app.route('/api/media/<media_id>/interview/start', methods=['POST'])
 def start_interview(media_id):
     """Start a new AI interview for a media item."""
-    item = firestore_db.get_media_item(media_id)
+    item = enhanced_db.get_media_item(media_id)
     if not item:
         return jsonify({"error": "Media item not found"}), 404
     
@@ -177,7 +168,7 @@ def start_interview(media_id):
 @app.route('/api/media/<media_id>/interview/chat', methods=['POST'])
 def chat_interview(media_id):
     """Continue an AI interview conversation."""
-    item = firestore_db.get_media_item(media_id)
+    item = enhanced_db.get_media_item(media_id)
     if not item:
         return jsonify({"error": "Media item not found"}), 404
     
@@ -220,7 +211,7 @@ def chat_interview(media_id):
 @app.route('/api/media/<media_id>/interview/save', methods=['POST'])
 def save_interview(media_id):
     """Save an interview conversation as context."""
-    item = firestore_db.get_media_item(media_id)
+    item = enhanced_db.get_media_item(media_id)
     if not item:
         return jsonify({"error": "Media item not found"}), 404
     
@@ -238,7 +229,7 @@ def save_interview(media_id):
         ])
         
         # Save as context
-        context_id = firestore_db.add_context(media_id, conversation_md, context_type='ai_interview')
+        context_id = enhanced_db.add_context(media_id, conversation_md, context_type='ai_interview')
         
         return jsonify({
             "message": "Interview saved as context successfully",

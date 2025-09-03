@@ -1,28 +1,27 @@
 import os
 from flask import Flask, jsonify, request, render_template, send_file, redirect, url_for, flash, session
+from flask_cors import CORS
 from dotenv import load_dotenv
-from google.cloud import storage
-from firestore_db import FirestoreDB
+from app.enhanced_data_store import EnhancedDataStore
 import mimetypes
 from io import BytesIO
 from interview_bot import run_interview
 from interviewer_bot import run_interview_chat
+from app.enhanced_routes import enhanced_bp
 
 # Load environment variables from config.env
 load_dotenv(dotenv_path='config.env')
 
 app = Flask(__name__)
 
-# Example of how you might retrieve your Google Application Credentials
-google_app_creds = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+# Enable CORS for React frontend
+CORS(app, origins=['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173'])
 
-# GCS setup
-GCS_BUCKET_NAME = os.getenv('GCS_BUCKET_NAME')
-storage_client = storage.Client()
+# Register the enhanced routes blueprint
+app.register_blueprint(enhanced_bp)
 
-# Firestore setup
-FIRESTORE_DATABASE_NAME = os.getenv('FIRESTORE_DATABASE_NAME', '(default)')
-firestore_db = FirestoreDB(database_name=FIRESTORE_DATABASE_NAME)
+# Enhanced Data Store setup (PostgreSQL)
+enhanced_db = EnhancedDataStore()
 
 app.secret_key = os.getenv('FLASK_SECRET_KEY', 'dev_secret')  # Needed for session
 
@@ -40,52 +39,50 @@ def health_check():
 
 @app.route('/api/media')
 def list_media():
-    """Lists media from GCS and syncs with Firestore."""
-    
-    # Get GCS bucket
-    bucket = storage_client.bucket(GCS_BUCKET_NAME)
-    blobs = bucket.list_blobs()
-    gcs_files = [blob.name for blob in blobs]
-
-    # Sync with Firestore
-    new_items = firestore_db.sync_gcs_files(gcs_files)
-    
-    # Get all media items from Firestore
-    items = firestore_db.list_media_items()
-    return jsonify(items)
+    """Lists media from the local database."""
+    try:
+        # Get all media items from the database
+        items = enhanced_db.list_media_items()
+        return jsonify(items)
+    except Exception as e:
+        return jsonify({"error": f"Failed to list media: {str(e)}"}), 500
 
 @app.route('/media/<doc_id>')
 def get_media_item(doc_id):
     """Get a specific media item by document ID."""
-    item = firestore_db.get_media_item(doc_id)
+    item = enhanced_db.get_media_item(doc_id)
     if item:
         return jsonify(item)
     return jsonify({"error": "Media item not found"}), 404
 
-@app.route('/media/<doc_id>/preview')
+@app.route('/api/media/<doc_id>/preview')
 def preview_media(doc_id):
-    """Preview media file from GCS."""
-    item = firestore_db.get_media_item(doc_id)
+    """Preview media file from local storage."""
+    item = enhanced_db.get_media_item(doc_id)
     if not item:
         return jsonify({"error": "Media item not found"}), 404
     
     try:
-        bucket = storage_client.bucket(GCS_BUCKET_NAME)
-        blob = bucket.blob(item['gcs_path'])
+        file_path = item.get('file_path')
+        
+        # Check if file_path exists in the item
+        if not file_path:
+            return jsonify({"error": "No file path found for media item"}), 404
+        
+        # Check if file exists
+        if not os.path.exists(file_path):
+            return jsonify({"error": "File not found"}), 404
         
         # Get the content type
-        content_type, _ = mimetypes.guess_type(item['gcs_path'])
+        content_type, _ = mimetypes.guess_type(file_path)
         if not content_type:
             content_type = 'application/octet-stream'
         
-        # Download the file content
-        file_content = blob.download_as_bytes()
-        
         return send_file(
-            BytesIO(file_content),
+            file_path,
             mimetype=content_type,
             as_attachment=False,
-            download_name=os.path.basename(item['gcs_path'])
+            download_name=os.path.basename(file_path)
         )
     except Exception as e:
         return jsonify({"error": f"Failed to load media: {str(e)}"}), 500
@@ -96,7 +93,7 @@ def update_description(doc_id):
     data = request.get_json()
     description = data.get('description', '')
     
-    success = firestore_db.update_media_item(doc_id, description=description)
+    success = enhanced_db.update_media_item(doc_id, description=description)
     if success:
         return jsonify({"message": "Description updated successfully"})
     return jsonify({"error": "Failed to update description"}), 400
@@ -106,7 +103,7 @@ def update_description(doc_id):
 @app.route('/media/<media_id>/contexts', methods=['GET'])
 def get_contexts(media_id):
     """Get all context entries for a media item."""
-    contexts = firestore_db.get_contexts(media_id)
+    contexts = enhanced_db.get_contexts(media_id)
     return jsonify(contexts)
 
 @app.route('/media/<media_id>/contexts', methods=['POST'])
@@ -116,7 +113,7 @@ def add_context(media_id):
     if not data or 'text' not in data:
         return jsonify({"error": "Missing 'text' in request body"}), 400
     
-    context_id = firestore_db.add_context(media_id, data['text'])
+    context_id = enhanced_db.add_context(media_id, data['text'])
     return jsonify({"message": "Context added successfully", "id": context_id}), 201
 
 @app.route('/media/<media_id>/contexts/<context_id>', methods=['PUT'])
@@ -126,7 +123,7 @@ def update_context(media_id, context_id):
     if not data or 'text' not in data:
         return jsonify({"error": "Missing 'text' in request body"}), 400
 
-    success = firestore_db.update_context(media_id, context_id, data['text'])
+    success = enhanced_db.update_context(media_id, context_id, data['text'])
     if success:
         return jsonify({"message": "Context updated successfully"})
     return jsonify({"error": "Failed to update context"}), 400
@@ -134,14 +131,14 @@ def update_context(media_id, context_id):
 @app.route('/media/<media_id>/contexts/<context_id>', methods=['DELETE'])
 def delete_context(media_id, context_id):
     """Delete a specific context entry."""
-    success = firestore_db.delete_context(media_id, context_id)
+    success = enhanced_db.delete_context(media_id, context_id)
     if success:
         return jsonify({"message": "Context deleted successfully"})
     return jsonify({"error": "Failed to delete context"}), 400
 
 @app.route('/media/<media_id>/interview', methods=['GET', 'POST'])
 def interview_media(media_id):
-    item = firestore_db.get_media_item(media_id)
+    item = enhanced_db.get_media_item(media_id)
     if not item:
         return "Media item not found", 404
     if request.method == 'POST':
@@ -156,7 +153,7 @@ def interview_media(media_id):
 
 @app.route('/media/<media_id>/ai-interview', methods=['GET', 'POST'])
 def ai_interview_media(media_id):
-    item = firestore_db.get_media_item(media_id)
+    item = enhanced_db.get_media_item(media_id)
     if not item:
         return "Media item not found", 404
     if 'ai_chat' not in session or session.get('ai_chat_media_id') != media_id:
@@ -183,7 +180,7 @@ def ai_interview_media(media_id):
                 conversation_md = '\n'.join([
                     f"**{m['role'].capitalize()}:** {m['content']}" for m in messages if m['role'] != 'system']
                 )
-                firestore_db.add_context(media_id, conversation_md, context_type='ai_interview')
+                enhanced_db.add_context(media_id, conversation_md, context_type='ai_interview')
                 flash('Interview saved as context!', 'success')
                 session.pop('ai_chat', None)
                 session.pop('ai_chat_media_id', None)
@@ -197,7 +194,7 @@ def ai_interview_media(media_id):
 @app.route('/media/<media_id>/gallery-interview', methods=['GET', 'POST'])
 def gallery_interview(media_id):
     """Gallery interview with image context from GCS."""
-    item = firestore_db.get_media_item(media_id)
+    item = enhanced_db.get_media_item(media_id)
     if not item:
         return "Media item not found", 404
     
@@ -217,26 +214,14 @@ def gallery_interview(media_id):
     if request.method == 'POST':
         user_text = request.form.get('user_text')
         if user_text:
-            # Get the image from GCS for the interview
+            # For now, run interview without image (placeholder functionality)
             try:
-                bucket = storage_client.bucket(GCS_BUCKET_NAME)
-                blob = bucket.blob(item['gcs_path'])
-                
-                # Download image to temporary file
-                import tempfile
-                with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as tmp_file:
-                    blob.download_to_filename(tmp_file.name)
-                    tmp_path = tmp_file.name
-                
-                # Run interview with image
+                # TODO: Implement local image handling when you have actual image files
                 ai_question, messages = run_interview_chat(
                     user_text, 
                     previous_messages=messages,
-                    image_path=tmp_path
+                    image_path=None  # No image for now
                 )
-                
-                # Clean up temp file
-                os.unlink(tmp_path)
                 
                 session['gallery_chat'] = messages
                 
@@ -246,7 +231,7 @@ def gallery_interview(media_id):
                         f"**{m['role'].capitalize()}:** {m['content']}" 
                         for m in messages if m['role'] != 'system'
                     ])
-                    firestore_db.add_context(media_id, conversation_md, context_type='ai_interview')
+                    enhanced_db.add_context(media_id, conversation_md, context_type='ai_interview')
                     flash('Interview saved as context!', 'success')
                     session.pop('gallery_chat', None)
                     session.pop('gallery_chat_media_id', None)
@@ -270,20 +255,13 @@ def gallery_interview(media_id):
     # If no previous conversation, start with an initial question
     if not ai_question and not messages:
         try:
-            bucket = storage_client.bucket(GCS_BUCKET_NAME)
-            blob = bucket.blob(item['gcs_path'])
-            
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as tmp_file:
-                blob.download_to_filename(tmp_file.name)
-                tmp_path = tmp_file.name
-            
+            # TODO: Implement local image handling when you have actual image files
             ai_question, messages = run_interview_chat(
                 "I'd like to talk about this image.",
                 previous_messages=None,
-                image_path=tmp_path
+                image_path=None  # No image for now
             )
             
-            os.unlink(tmp_path)
             session['gallery_chat'] = messages
             
         except Exception as e:

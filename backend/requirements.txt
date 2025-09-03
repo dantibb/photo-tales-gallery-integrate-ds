@@ -6,3 +6,8 @@ gunicorn==22.0.0
 openai
 Pillow 
 flask_session
+psycopg2-binary==2.9.9
+chromadb==0.4.24
+numpy<2.0
+requests==2.31.0
+beautifulsoup4==4.12.2
